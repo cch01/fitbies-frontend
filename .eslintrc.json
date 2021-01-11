@@ -9,39 +9,27 @@
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-      "project": "./tsconfig.json",
-      "tsconfigRootDir": "./",  
-      "ecmaFeatures": {
-          "jsx": true
-      },
-      "ecmaVersion": 12,
-      "sourceType": "module"
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
     },
     "plugins": [
         "react",
         "@typescript-eslint"
     ],
     "rules": {
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx", "ts"] }],
-      "import/extensions": [
-        "error",
-        "ignorePackages",
-        {
-          "js": "never",
-          "jsx": "never",
-          "ts": "never",
-          "tsx": "never",
-          "scss": "never",
-          "css": "never"
-        }
-     ]
-    },
-    "settings": {
-      "import/resolver": {
-        "node": {
-          "extensions": [".js", ".jsx", ".ts", ".tsx", "scss", "css"]
-        },
-        "typescript": {} 
-      }
+      "semi": ["warn", "always"],
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+      "no-nested-ternary": "off",
+      "react/prop-types": 0,
+      "no-underscore-dangle":"off",
+      "import/prefer-default-export": "off",
+      "import/no-unresolved": "off",
+      "no-unused-expressions": "off",
+      "no-use-before-define": "off",
+      "no-unused-vars": "off",
+      "import/extensions": "off"
     }
 }
