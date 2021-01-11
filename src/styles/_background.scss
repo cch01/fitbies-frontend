@@ -1,0 +1,24 @@
+.bg-cover, .background-cover {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+}
+.bg-contain, .background-contain {
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+}
+.bg-fixed, .background-fixed {
+		background-attachment: fixed;
+}
+
+$position-y: top center bottom;
+$position-x: left center right;
+
+@each $y in $position-y {
+	@each $x in $position-x {
+	  .bg-#{x}-#{y}, .background-#{x}-#{y} {
+			background-position: $y $x;
+	  }
+	}
+}

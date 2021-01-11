@@ -1,0 +1,90 @@
+$fontSizes: (
+	font-extra: ( desktop: $font-extra, mobile: $font-extra-mobile ),
+	h1: ( desktop: $h1, mobile: $h1-mobile ),
+	h2: ( desktop: $h2, mobile: $h2-mobile ),
+	h3: ( desktop: $h3, mobile: $h3-mobile ),
+	h4: ( desktop: $h4, mobile: $h4-mobile ),
+	h5: ( desktop: $h5, mobile: $h5-mobile ),
+	h6: ( desktop: $h6, mobile: $h6-mobile ),
+	p: ( desktop: $p, mobile: $p-mobile ),
+	table: ( desktop: $p, mobile: $p-mobile ),
+	div: ( desktop: $p, mobile: $p-mobile ),
+	span: ( desktop: $span, mobile: $span-mobile),
+	small: ( desktop: $small, mobile: $small-mobile )
+);
+
+@each $key, $fontSizeSet in $fontSizes {
+  #{$key}, .#{$key} {
+	  vertical-align: middle;
+      font-size: map-get($fontSizeSet, desktop);
+      .hr { height: map-get($fontSizeSet, desktop); }
+			@include mobile { font-size: map-get($fontSizeSet, mobile); }
+  }
+}
+
+h1, h2, h3 {
+	line-height: 1.2;
+	&.b { font-weight: 700; }
+	.b { font-weight: 700; }
+	b { font-weight: 700; }
+}
+h4, h5, h6, span, p, small {
+	line-height: 1.3;
+	&.b { font-weight: 500; }
+	.b { font-weight: 500; }
+	b { font-weight: 500; }
+}
+.h1, .h2, .h3 {
+	line-height: 1.2;
+	&.b { font-weight: 700; }
+	.b { font-weight: 700; }
+	b { font-weight: 700; }
+}
+.h4, .h5, .h6, .span, .p, .small {
+	line-height: 1.3;
+	&.b { font-weight: 500; }
+	.b { font-weight: 500; }
+	b { font-weight: 500; }
+}
+.font-extra {
+	line-height: 1.2;
+	&.b { font-weight: 700; }
+	.b { font-weight: 700; }
+	b { font-weight: 700; }
+}
+
+.text-center 	{ text-align: center; }
+.text-left 		{ text-align: left; 	}
+.text-right 	{ text-align: right; 	}
+
+.text-top 		{ vertical-align: top; 		}
+.text-middle	{ vertical-align: middle; }
+.text-bottom 	{ vertical-align: bottom; }
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.text-overflow {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.line-through, s, .s {
+	text-decoration: line-through;
+}
+.underline {
+	text-decoration: underline;
+}
+
+@for $i from 0 through 15 {
+	.line-clamp-#{$i} {
+			-webkit-line-clamp: $i;
+	}
+	@include mobile { 
+			.m-line-clamp-#{$i} {
+					-webkit-line-clamp: $i;
+			}
+		
+	}
+}

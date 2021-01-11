@@ -1,0 +1,27 @@
+.border {
+		border: 1px #ccc solid;
+}
+.border-transparent {
+		border: 1px transparent solid;
+}
+.border-bottom {
+		border-bottom: 1px #ccc solid;
+}
+.border-left {
+		border-left: 1px #ccc solid;
+}
+.border-top {
+		border-top: 1px #ccc solid;
+}
+.border-right {
+		border-right: 1px #ccc solid;
+}
+.border-radius {
+		border-radius: $radius;
+}
+.border-radius-sm {
+		border-radius: $radius-sm;
+}
+.border-circle {
+	border-radius: 50px;
+}

@@ -1,0 +1,42 @@
+.position-fixed {
+	position: fixed;
+	left: 0;
+	top: 0;
+}
+.position-absolute {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.position-absolute-right {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.position-fixed-important {
+	position: fixed !important;
+	z-index: 9999 !important;
+}
+.top {
+	top: 0;
+	bottom: auto;
+}
+.bottom {
+	top: auto;
+	bottom: 0;
+}
+.left {
+	left: 0;
+	right: auto;
+}
+.right {
+	left: auto;
+	right: 0;
+}
+
+
+@for $i from 0 through 8 {
+	.z#{$i}{
+		z-index: $i;
+	}
+}

@@ -1,0 +1,66 @@
+$mobile-width: 719px;
+$tablet-width: 920px;
+
+$padding: 5px;
+$margin: 5px;
+
+$square-width: 20px; 
+
+$radius: 14px;
+$radius-sm: 8px;
+
+$main-max-width: 1650px;
+
+
+$transparent: transparent;
+$white: #fff;
+$black: #111;
+$grey-f: #F9f9f9;
+$grey-d: #D9D9D9;
+$grey-e: #E0E0E0;
+$grey-b: #BCBBBB;
+$grey-a: #AFAFAF;
+$grey-8: #8B8B8B;
+$grey-7: #707070;
+$green: #24723F;
+$light-green: #39A319;
+$dark-green: #03331F;
+$yellow: #FFD663;
+$red: #e74c3c;
+$light-red: #FD9595;
+$pink: #E3098F;
+$purple: #9595FD;
+$orange: #FFCB1F;
+$blue: #275A9C;
+$light-blue: #A7D0DD;
+$light-yellow: #FFF1C1;
+
+$font-extra: 50px; $font-extra-mobile: 40px;
+$h1: 35px; $h1-mobile: 28px;
+$h2: 22px; $h2-mobile: 20px;
+$h3: 18px; $h3-mobile: 16px;
+$h4: 16px; $h4-mobile: 14px;
+$h5: 14px; $h5-mobile: 14px;
+$h6: 14px; $h6-mobile: 14px;
+
+$p: 14px; $p-mobile: 14px;
+$span: 14px; $span-mobile: 14px;
+$small: 12px; $small-mobile: 12px;
+
+@mixin mobile {
+	@media (max-width: $mobile-width) {
+		@content;
+	}
+}
+@mixin tablet {
+	@media (max-width: $tablet-width) and (min-width: $mobile-width + 1){
+		@content;
+	}
+}
+@mixin desktop {
+	@media (min-width: $tablet-width + 1) {
+		@content;
+	}
+}
+
+

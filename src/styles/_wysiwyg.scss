@@ -1,0 +1,57 @@
+.wysiwyg {
+	text-align: left;
+	p {
+		line-height: 1.6;
+		margin: 18px 0;
+	}
+	table, th, td {
+		border: 1px solid $grey-b;
+	}
+	th, td {
+		padding: 10px 10px;
+		line-height: 1.6;
+	}
+	th {
+		background: $grey-f;
+		font-weight: bold;
+	}
+	h1 {
+		font-size: 32px;
+		margin: 20px 0 10px;
+
+	}
+	h2 {
+		font-size: 28px;
+		margin: 20px 0 10px;
+
+	}
+	h3 {
+		font-size: 24px;
+		margin: 20px 0 10px;
+	}
+	i {
+		font-style: italic;
+	}
+	ul, ol {
+		display: block;
+		margin: 0;
+		padding: 0;
+		padding-left: 28px;
+	}
+	li {
+		line-height: 1.5;
+	}
+	ol {
+		list-style: decimal;
+	}
+	ul {
+		list-style: disc;
+	}
+	b, strong {
+		font-weight: bold;
+	}
+	a {
+		text-decoration: underline;
+		color: $blue;
+	}
+}

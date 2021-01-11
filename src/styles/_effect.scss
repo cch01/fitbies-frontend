@@ -1,0 +1,24 @@
+.hoverEnlarge {
+	transition: all 0.3s;
+	&:hover {
+		transform: scale(1.3);
+	}
+}
+.hoverShadow {
+	&:hover {
+		@extend .shadow;
+	}
+}
+.hoverBgYellow {
+	&:hover {
+		@extend .bg-yellow;
+	}
+}
+.hoverBorderYellow {
+	&:hover {
+		@extend .border-yellow;
+	}
+}
+.transition {
+	transition: all 0.3s;
+}

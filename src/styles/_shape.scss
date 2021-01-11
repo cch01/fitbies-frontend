@@ -1,0 +1,43 @@
+
+
+  .square {
+      width: $square-width;
+      height: $square-width;
+      border: none;
+
+      @extend .flex-row;
+      @extend .flex-wrap;
+      @extend .flex-x-center;
+      @extend .flex-y-center;
+      @extend .border-transparent;
+      @extend .bg-cover;
+  }
+  .square-padding {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+  .circle {
+      width: $square-width;
+      height: $square-width;
+      border: none;
+      border-radius: 1000px;
+      @extend .flex-row;
+      @extend .flex-wrap;
+      @extend .flex-x-center;
+      @extend .flex-y-center;
+      @extend .border-transparent;
+      @extend .bg-cover;
+  }
+  @for $i from 2 through 20 {
+      .square-#{$i} {
+          @extend .square;
+          width: $square-width + (5 * $i);
+          height: $square-width + (5 * $i);
+      }
+      .circle-#{$i} {
+          @extend .circle;
+          width: $square-width + (5 * $i);
+          height: $square-width + (5 * $i);
+          border-radius: $square-width + (5 * $i);
+      }
+  }

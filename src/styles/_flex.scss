@@ -1,0 +1,141 @@
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &.flex-reverse { flex-direction: row-reverse; }
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    &.flex-reverse { flex-direction: column-reverse; }
+}
+
+.flex-nowrap  { flex-wrap: nowrap;  }
+.flex-wrap    { flex-wrap: wrap;    }
+
+.flex-x-start   { justify-content: flex-start;  }
+.flex-x-center  { justify-content: center;      }
+.flex-x-end     { justify-content: flex-end;    }
+
+.flex-y-start   { align-items: flex-start;      }
+.flex-y-center  { align-items: center;          }
+.flex-y-end     { align-items: flex-end;        }
+
+.flex-space-between { justify-content: space-between; }
+.flex-space-around  { justify-content: space-around;  }
+.flex-space-evenly  { justify-content: space-evenly;  }
+
+.self-flex-x-start { justify-self: start; }
+.self-flex-x-center { justify-self: center; }
+.self-flex-x-end { justify-self: end; }
+
+.self-flex-y-start { align-self: start; }
+.self-flex-y-center { align-self: center; }
+.self-flex-y-end { align-self: end; }
+
+.flex-fill { align-items: stretch; }
+
+
+.flex { flex: 1; }
+
+@for $i from 1 through 12 {
+    .flex-#{$i} { flex: $i; } // flex: 1; to flex: 12;
+}
+
+@for $i from 1 through 10 {
+    .flex-#{$i * 10}p { flex: 0% + $i * 10; } // flex: 0%; to flex: 100%;
+}
+
+/* ======
+  Mobile with `m` as prefix
+  ====== */
+
+  @include tablet {
+    .tflex-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        &.mflex-reverse { flex-direction: row-reverse; }
+    }
+
+    .tflex-column {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        &.mflex-reverse { flex-direction: column-reverse; }
+    }
+
+    .tflex-nowrap  { flex-wrap: nowrap;  }
+    .tflex-wrap    { flex-wrap: wrap;    }
+
+    .tflex-x-start   { justify-content: flex-start;  }
+    .tflex-x-center  { justify-content: center;      }
+    .tflex-x-end     { justify-content: flex-end;    }
+
+    .tflex-y-start   { align-items: flex-start;      }
+    .tflex-y-center  { align-items: center;          }
+    .tflex-y-end     { align-items: flex-end;        }
+
+    .tflex-space-between { justify-content: space-between; }
+    .tflex-space-around  { justify-content: space-around;  }
+    .tflex-space-evenly  { justify-content: space-evenly;  }
+
+    .tflex-fill { align-items: stretch; }
+
+
+    .tflex { flex: 1; }
+
+    @for $i from 1 through 12 {
+        .tflex-#{$i} { flex: $i; } // flex: 1; to flex: 12;
+    }
+
+    @for $i from 1 through 10 {
+        .tflex-#{$i * 10}p { flex: 0% + $i * 10; } // flex: 0%; to flex: 100%;
+    }
+  }
+
+@include mobile {
+  .mflex-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      &.mflex-reverse { flex-direction: row-reverse; }
+  }
+
+  .mflex-column {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      &.mflex-reverse { flex-direction: column-reverse; }
+  }
+
+  .mflex-nowrap  { flex-wrap: nowrap;  }
+  .mflex-wrap    { flex-wrap: wrap;    }
+
+  .mflex-x-start   { justify-content: flex-start;  }
+  .mflex-x-center  { justify-content: center;      }
+  .mflex-x-end     { justify-content: flex-end;    }
+
+  .mflex-y-start   { align-items: flex-start;      }
+  .mflex-y-center  { align-items: center;          }
+  .mflex-y-end     { align-items: flex-end;        }
+
+  .mflex-space-between { justify-content: space-between; }
+  .mflex-space-around  { justify-content: space-around;  }
+  .mflex-space-evenly  { justify-content: space-evenly;  }
+
+  .mflex-fill { align-items: stretch; }
+
+
+  .mflex { flex: 1; }
+
+  @for $i from 1 through 12 {
+      .mflex-#{$i} { flex: $i; } // flex: 1; to flex: 12;
+  }
+
+  @for $i from 1 through 10 {
+      .mflex-#{$i * 10}p { flex: 0% + $i * 10; } // flex: 0%; to flex: 100%;
+  }
+}

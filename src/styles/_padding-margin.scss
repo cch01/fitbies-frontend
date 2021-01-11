@@ -1,0 +1,111 @@
+$padding: 5px;
+$margin: 5px;
+$from: 0;
+$to: 8;
+
+.p-auto {padding: auto;}
+.p-sm {padding: 2px;}
+.m-auto {margin: auto;}
+
+@for $i from $from through $to {
+    .p#{$i} { padding:  $padding * $i;  }
+    .m#{$i} { margin:   $margin * $i;   }
+}
+@for $i from 0 through 8 {
+    .px-#{$i} { padding-left:   $padding * $i;  padding-right:  $padding * $i; }
+    .py-#{$i} { padding-top:    $padding * $i;  padding-bottom: $padding * $i; }
+    .pt-#{$i} { padding-top:    $padding * $i;  }
+    .pr-#{$i} { padding-right:  $padding * $i;  }
+    .pb-#{$i} { padding-bottom: $padding * $i;  }
+    .pl-#{$i} { padding-left:   $padding * $i;  }
+    
+    .mx-#{$i} { margin-left:    $margin * $i;   margin-right:   $margin * $i; }
+    .my-#{$i} { margin-top:     $margin * $i;   margin-bottom:  $margin * $i; }
+    .mt-#{$i} { margin-top:     $margin * $i;   }
+    .mr-#{$i} { margin-right:   $margin * $i;   }
+    .mb-#{$i} { margin-bottom:  $margin * $i;   }
+    .ml-#{$i} { margin-left:    $margin * $i;   }    
+}
+
+/* ======
+  Mobile with `m` as prefix 
+  ====== */
+
+@include mobile { 
+  .mp-auto {padding: auto;}
+  .mp-sm {padding: 2px;}
+  .mm-auto {margin: auto;}
+  @for $i from $from through $to {
+      .mp#{$i} { padding:  $padding * $i;  }
+      .mm#{$i} { margin:   $margin * $i;   }
+  }
+  @for $i from 0 through 8 {
+      .mpx-#{$i} { padding-left:   $padding * $i;  padding-right:  $padding * $i; }
+      .mpy-#{$i} { padding-top:    $padding * $i;  padding-bottom: $padding * $i; }
+      .mpt-#{$i} { padding-top:    $padding * $i;  }
+      .mpr-#{$i} { padding-right:  $padding * $i;  }
+      .mpb-#{$i} { padding-bottom: $padding * $i;  }
+      .mpl-#{$i} { padding-left:   $padding * $i;  }
+      
+      .mmx-#{$i} { margin-left:    $margin * $i;   margin-right:   $margin * $i; }
+      .mmy-#{$i} { margin-top:     $margin * $i;   margin-bottom:  $margin * $i; }
+      .mmt-#{$i} { margin-top:     $margin * $i;   }
+      .mmr-#{$i} { margin-right:   $margin * $i;   }
+      .mmb-#{$i} { margin-bottom:  $margin * $i;   }
+      .mml-#{$i} { margin-left:    $margin * $i;   }    
+  }
+}
+  
+// @include mobile { 
+// @for $i from 0 through 8 {
+//     .mp#{$i} { padding: $padding * $i; } }
+// }
+// @for $i from 0 through 8 {
+//     .mpx-#{$i} { @include mobile {
+//         padding-left: $padding * $i;
+//         padding-right: $padding * $i;
+//     }}
+//     .mpy-#{$i} { @include mobile {
+//         padding-top: $padding * $i;
+//         padding-bottom: $padding * $i;
+//     }}
+//     .mpt-#{$i} { @include mobile {
+//         padding-top: $padding * $i;
+//     }}
+//     .mpr-#{$i} { @include mobile {
+//         padding-right: $padding * $i;
+//     }}
+//     .mpb-#{$i} { @include mobile {
+//         padding-bottom: $padding * $i;
+//     }}
+//     .mpl-#{$i} { @include mobile {
+//         padding-left: $padding * $i;
+//     }}
+// }
+// @for $i from 0 through 8 {
+//     .mm#{$i} { @include mobile {
+//         margin: $margin * $i;
+//     }}
+// }
+// @for $i from 0 through 8 {
+//     .mmx-#{$i} {@include mobile {
+//         margin-left: $margin * $i;
+//         margin-right: $margin * $i;
+//     }}
+//     .mmy-#{$i} {@include mobile {
+//         margin-top: $margin * $i;
+//         margin-bottom: $margin * $i;
+//     }}
+//     .mmt-#{$i} {@include mobile {
+//         margin-top: $margin * $i;
+//     }}
+//     .mmr-#{$i} {@include mobile {
+//         margin-right: $margin * $i;
+//     }}
+//     .mmb-#{$i} {@include mobile {
+//         margin-bottom: $margin * $i;
+//     }}
+//     .mml-#{$i} {@include mobile {
+//         margin-left: $margin * $i;
+//     }}
+// }

@@ -1,0 +1,31 @@
+$colors: (
+	transparent: $transparent,
+	white: $white,
+	black: $black,
+	grey-f: $grey-f,
+	grey-d: $grey-d,
+	grey-e: $grey-e,
+	grey-b: $grey-b,
+	grey-a: $grey-a,
+	grey-8: $grey-8,
+	grey-7: $grey-7,
+	green: $green,
+	light-green: $light-green,
+	dark-green: $dark-green,
+	yellow: $yellow,
+	light-yellow: $light-yellow,
+	red: $red,
+	light-red: $light-red,
+	pink: $pink,
+	purple: $purple,
+	orange: $orange,
+  blue: $blue,
+	light-blue: $light-blue
+);
+
+
+@each $key, $color in $colors {
+  .#{$key} { color: $color; }
+  .bg-#{$key} { background-color: $color; }
+  .border-#{$key} { border-color: $color; }
+}

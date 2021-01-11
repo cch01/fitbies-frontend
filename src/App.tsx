@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Peer from 'peerjs';
+import Landing from 'pages/landing';
+import Test from 'pages/test';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+// const id = (Math.random()*50).toString()
+// console.log('id',id)
+// const peer = new Peer(id, {host:'localhost', path:"/rooms", port: 3001 });
+// const conn = peer.connect('another-peers-id');
+// conn.on('open', () => {
+//   conn.send('hi x 2!!, I am '+id);
+// });
+
+// peer.on('connection', (conn) => {
+//   conn.on('data', (data) => {
+//     // Will print 'hi!'
+//     console.log(data);
+//   });
+//   conn.on('open', () => {
+//     conn.send('hello! me is '+id);
+//   });
+// });
+
+const App: React.FC = () => (
+  <React.StrictMode>
+    <Router>
+      <div className="App">
+        <Landing />
+      </div>
+    </Router>
+  </React.StrictMode>
+);
 
 export default App;

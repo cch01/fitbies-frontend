@@ -1,0 +1,53 @@
+.hide {
+	display: none;
+}
+.invisible {
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.desktop-only {
+	@include mobile { display: none !important; }
+	@include tablet { display: none !important; }
+}
+.tablet-only {
+	@include mobile { display: none !important; }
+}
+.mobile-only {
+	@include tablet 	{ display: none !important; }
+	@include desktop 	{ display: none !important; }
+}
+.desktop-hide {
+	@include desktop 	{ display: none !important; }
+}
+.mobile-hide {
+	@include mobile { display: none !important; }
+}
+.tablet-hide {
+	@include tablet { display: none !important; }
+	@include mobile { display: none !important; }
+}
+
+.overflow-scroll {
+		overflow: scroll;
+		overflow: overlay;
+}
+.overflow-x-scroll {
+		overflow-y: hidden;
+		overflow-x: scroll;
+		overflow-x: overlay;
+}
+.overflow-x-hidden {
+	overflow-x: hidden;
+}
+.overflow-y-scroll {
+		overflow-y: scroll;
+		overflow-x: hidden;
+		overflow-y: overlay;
+}
+.overflow-hidden {
+		overflow: hidden;
+}
+.overflow-visible {
+	overflow: visible;
+}
