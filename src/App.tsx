@@ -3,6 +3,12 @@ import Peer from 'peerjs';
 import Landing from 'pages/landing';
 import Test from 'pages/test';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/react-hooks';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { useInitApollo } from 'hooks/useInitApollo';
+import { observer } from 'mobx-react';
+import { useStores } from 'hooks/useStores';
 
 // const id = (Math.random()*50).toString()
 // console.log('id',id)
@@ -22,14 +28,31 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 //   });
 // });
 
-const App: React.FC = () => (
-  <React.StrictMode>
-    <Router>
+const App: React.FC = observer(() => {
+  const { authStore } = useStores();
+  const client = useInitApollo(authStore.currentToken, () => {
+    // eslint-disable-next-line no-console
+    console.warn('Clearing cookie...');
+    authStore.logout();
+  });
+
+  return (
+    <ApolloProvider client={client}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
       <div className="App">
         <Landing />
       </div>
-    </Router>
-  </React.StrictMode>
-);
+    </ApolloProvider>
+  );
+});
 
 export default App;

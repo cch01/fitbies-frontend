@@ -30,6 +30,10 @@
       "no-unused-expressions": "off",
       "no-use-before-define": "off",
       "no-unused-vars": "off",
-      "import/extensions": "off"
+      "import/extensions": "off",
+      "jsx-a11y/anchor-is-valid": "warn",
+      "react/no-unescaped-entities": "warn",
+      "max-len": 0
+
     }
 }
