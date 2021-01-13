@@ -12,7 +12,24 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import SingleLineFormField from 'components/forms/SingleLineFormField';
+import { useForm } from 'react-final-form-hooks';
 
+export interface SignInInput {
+  email: string;
+  password: string;
+}
+
+export interface JoinMeetingInput {
+  joinerId: string;
+  meetingId: string;
+}
+
+interface LandingPageProps {
+  onSignIn(input: SignInInput): any;
+  onJoinMeeting(input: JoinMeetingInput): any;
+  other(): any
+}
 const Copyright: React.FC = () => (
   <Typography variant="body2" color="textSecondary" align="center">
     {'Copyright © '}
@@ -45,8 +62,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Landing:React.FC = () => {
+const LandingPage:React.FC<LandingPageProps> = ({ other, onSignIn, onJoinMeeting }) => {
   const classes = useStyles();
+  const { form: signInForm, handleSubmit: handleSignInSubmit, submitting: signInSubmitting } = useForm({ onSubmit: onSignIn });
+  const { form: joinMeetingForm, handleSubmit: handleJoinMeetingSubmit, submitting: joinMeetingSubmitting } = useForm({ onSubmit: onJoinMeeting });
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -57,8 +76,9 @@ const Landing:React.FC = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
+        <form className={classes.form} noValidate onSubmit={handleSignInSubmit}>
+          <SingleLineFormField
+            form={signInForm}
             variant="outlined"
             margin="normal"
             required
@@ -69,7 +89,8 @@ const Landing:React.FC = () => {
             autoComplete="email"
             autoFocus
           />
-          <TextField
+          <SingleLineFormField
+            form={signInForm}
             variant="outlined"
             margin="normal"
             required
@@ -95,7 +116,7 @@ const Landing:React.FC = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" onClick={other}>
                 Forgot password?
               </Link>
             </Grid>
@@ -114,4 +135,4 @@ const Landing:React.FC = () => {
   );
 };
 
-export default Landing;
+export default LandingPage;

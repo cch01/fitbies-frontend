@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import Peer from 'peerjs';
-import Landing from 'pages/landing';
-import Test from 'pages/test';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Route, Switch,
+  useLocation, useHistory,
+} from 'react-router-dom';
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useInitApollo } from 'hooks/useInitApollo';
 import { observer } from 'mobx-react';
 import { useStores } from 'hooks/useStores';
+import LoadingScreen from 'pages/landing/components/loadingScreen';
 
 // const id = (Math.random()*50).toString()
 // console.log('id',id)
@@ -28,13 +30,25 @@ import { useStores } from 'hooks/useStores';
 //   });
 // });
 
+const Landing: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/landing'));
+const Meeting: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/meeting'));
+
 const App: React.FC = observer(() => {
   const { authStore } = useStores();
-  const client = useInitApollo(authStore.currentToken, () => {
+  console.log('current Token', authStore.token);
+  const client = useInitApollo(authStore.token, () => {
     // eslint-disable-next-line no-console
     console.warn('Clearing cookie...');
     authStore.logout();
-  });
+  }, (token:string) => authStore.setToken(token.replace('Bearer ', '')));
+  useEffect(() => {
+    console.log('token changed');
+  }, [authStore.token]);
+  useEffect(() => {
+    console.log('client instance changed');
+  }, [client]);
+  const history = useHistory();
+  const location = useLocation();
 
   return (
     <ApolloProvider client={client}>
@@ -49,7 +63,12 @@ const App: React.FC = observer(() => {
         pauseOnHover
       />
       <div className="App">
-        <Landing />
+        <Suspense fallback={<LoadingScreen />}>
+          <Switch>
+            <Route exact path="/landing" component={Landing} />
+            <Route exact path="/" component={Meeting} />
+          </Switch>
+        </Suspense>
       </div>
     </ApolloProvider>
   );

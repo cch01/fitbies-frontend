@@ -1,8 +1,8 @@
 import {
   toJS, observable, computed, action, decorate,
 } from 'mobx';
-import Cookie from 'mobx-cookie';
 
+const expires = parseInt(process.env.REACT_APP_LOGIN_TOKEN_EXPIRY_DAY as string, 10);
 interface Viewer {
   _id: string | null,
   firstName: string | null,
@@ -13,7 +13,7 @@ interface Viewer {
   isActivated: boolean,
 }
 class AuthStore {
-  token = new Cookie('zoomed-token');
+  token = localStorage.getItem('access-token');
 
   viewer: Viewer = {
     _id: null,
@@ -25,35 +25,38 @@ class AuthStore {
     isActivated: false,
   };
 
-  get currentToken(): string | undefined { return this.token.value; }
+  get currentToken(): string | null { return toJS(this.token); }
 
-  get getViewer(): Viewer { return this.viewer; }
+  get currentViewer(): Viewer { return toJS(this.viewer); }
 
-  setToken(token: string): void {
-    this.token.set(token);
+  setToken = (newToken: string) => {
+    localStorage.setItem('access-token', newToken);
+    this.token = localStorage.getItem('access-token');
   }
 
   setViewer(viewer: Viewer): void {
     this.viewer = viewer;
   }
 
-  logout(): void {
-    this.token.remove();
+  logout = () => {
+    localStorage.removeItem('access-token');
+    this.token = localStorage.getItem('access-token');
   }
 
-  isLoggedIn(): boolean {
-    return !!this.viewer._id;
+  get isLoggedIn(): boolean {
+    return !!this.currentViewer._id;
   }
 }
 
 decorate(AuthStore, {
   currentToken: computed,
   isLoggedIn: computed,
-  cookie: observable,
+  token: observable,
+  setToken: action,
   viewer: observable,
   setViewer: action,
-  getViewer: computed,
+  currentViewer: computed,
   logout: action,
-});
+} as any);
 
 export default AuthStore;

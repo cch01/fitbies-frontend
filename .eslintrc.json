@@ -33,7 +33,7 @@
       "import/extensions": "off",
       "jsx-a11y/anchor-is-valid": "warn",
       "react/no-unescaped-entities": "warn",
-      "max-len": 0
-
+      "max-len": 0,
+      "react/jsx-props-no-spreading":0
     }
 }

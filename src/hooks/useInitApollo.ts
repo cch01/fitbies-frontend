@@ -1,41 +1,36 @@
 import {
-  ApolloClient, ApolloLink, InMemoryCache, NormalizedCacheObject,
+  ApolloClient, split, InMemoryCache, NormalizedCacheObject, createHttpLink, ApolloLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { useMemo } from 'react';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 
-export const useInitApollo = (token: string | undefined, onUnauthorizedError: Function):ApolloClient<NormalizedCacheObject> => useMemo(() => createApolloClient(token, onUnauthorizedError), [token]);
+export const useInitApollo = (token: string | null, onUnauthorizedError: Function, onReceivedResponse: Function):ApolloClient<NormalizedCacheObject> => useMemo(() => createApolloClient(token, onUnauthorizedError, onReceivedResponse), [token]);
 
-const createApolloClient = (token: string, onUnauthorizedError: Function):ApolloClient<NormalizedCacheObject> => {
+const createApolloClient = (token: string | null, onUnauthorizedError: Function, onReceivedResponse: Function):ApolloClient<NormalizedCacheObject> => {
   const authLink = createAuthLink(token);
-  const wsLink = createWebSocketLink();
   const errorLink = createErrorLink(onUnauthorizedError);
+  const afterwareLink = createAfterLink(onReceivedResponse);
+  const splitLink = createSplitLink(token, afterwareLink);
 
   return new ApolloClient({
-    uri: process.env.REACT_APP_GRAPHQL_URI,
     cache: new InMemoryCache({ addTypename: false }),
-    link: ApolloLink.from([errorLink, wsLink, authLink]),
+    link: ApolloLink.from([authLink, splitLink, errorLink]),
   });
 };
 
-const createAuthLink = (token: string): ApolloLink => {
+const createAuthLink = (token: string | null): ApolloLink => {
   const auth = token && { Authorization: `Bearer ${token}` };
   return setContext((request, { headers }) => ({
     headers: { ...headers, ...auth },
   }));
 };
 
-const createWebSocketLink = ():ApolloLink => {
-  const wsClient = new SubscriptionClient(process.env.REACT_APP_GRAPHQL_WS_URI, {
-    reconnect: true,
-  });
-  return new WebSocketLink(wsClient);
-};
-
-const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError(({ graphQLErrors, networkError = {} as any, operation }) => {
+const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError(({
+  graphQLErrors, networkError = {} as any, operation, forward,
+}) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
       // eslint-disable-next-line no-console
@@ -56,3 +51,35 @@ const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError((
     }
   }
 });
+
+const createAfterLink = (onReceivedResponse: Function) => new ApolloLink((operation, forward) => forward(operation).map((response) => {
+  const context = operation.getContext();
+  const { response: { headers } } = context;
+  if (headers) {
+    const authHeader = headers.get('Authorization') as string;
+    authHeader && onReceivedResponse(authHeader);
+  }
+  return response;
+}));
+
+const createSplitLink = (token: string | null, afterwareLink: ApolloLink): ApolloLink => {
+  const wsLink = new WebSocketLink({
+    uri: process.env.REACT_APP_GRAPHQL_WS_URI as any,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        ...token && { Authorization: `Bearer ${token}` },
+      },
+    },
+  });
+
+  const httpLink = createHttpLink({
+    uri: process.env.REACT_APP_GRAPHQL_URI,
+    fetchOptions: { credentials: 'include' },
+  });
+
+  return split(({ query }) => {
+    const definition = getMainDefinition(query);
+    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+  }, wsLink, afterwareLink.concat(httpLink));
+};
