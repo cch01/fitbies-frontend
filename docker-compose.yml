@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  zoomed_front:
+    container_name: zoomed_front
+    build: .
+    env_file:
+      - ./.env
+    environment:
+      - PORT=4000
+    ports:
+      - 4000:4000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: >
+      bash -c "yarn install
+      && yarn start"
+    networks:
+      - zoomed_front
+    stdin_open: true
+networks:
+  zoomed_front:
+    name: zoomed_front
+    external: false
