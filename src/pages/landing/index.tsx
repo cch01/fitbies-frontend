@@ -1,62 +1,25 @@
-import {
-  useMutation, useApolloClient, useSubscription, useQuery, useLazyQuery,
-} from '@apollo/client';
 import { useStores } from 'hooks/useStores';
-import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useQueryParam, NumberParam, StringParam } from 'use-query-params';
-import passwordHashCreator from 'lib/utils/passwordHashCreator';
-import { observer } from 'mobx-react';
-import subscriptionTest from 'graphql/subscriptionTest';
-import me from 'graphql/me';
-import signInMutation from './graphql/signIn';
-import joinMeetingMutation from './graphql/joinMeeting';
-import Landing, { JoinMeetingInput, SignInInput } from './components/landing';
 
-const LandingPage:React.FC = observer(() => {
-  const [redirect, setRedirect] = useQueryParam('redirect', StringParam);
+// TODO: fix shadow problem, split class to class module
+const LandingPage: React.FC = observer(() => {
   const history = useHistory();
   const { authStore } = useStores();
-  const [runSignInMutation] = useMutation(signInMutation, { fetchPolicy: 'no-cache' });
-  const [runJoinMeetingMutation] = useMutation(joinMeetingMutation);
-  const [runQuery, { called, data: meData }] = useLazyQuery(me);
-  console.log(meData);
-  const client = useApolloClient();
-
-  const {
-    variables, loading, data, error,
-  } = useSubscription(subscriptionTest);
-
-  console.log('data', data);
-
-  useEffect(() => {
-    if (authStore.isLoggedIn) {
-      history.push(redirect ?? '/');
-    }
-  }, [authStore.isLoggedIn]);
-
-  const onSignIn = (signInData: SignInInput): void => {
-    const hashedPassword = passwordHashCreator(signInData.password);
-    runSignInMutation({ variables: { input: { ...signInData, password: hashedPassword } } }).then((result) => {
-      authStore.setToken(result.data.signIn.token);
-      authStore.setViewer(result.data.signIn.user);
-    }).catch((err) => {
-      console.warn(err);
-      console.log('Clearing token');
-      authStore.logout();
-    });
-
-    runQuery();
+  const onClickHost:any = () => history.push('/auth');
+  const onClickJoin:any = () => {
+    authStore.isLoggedIn ? history.push('/join') : history.push({ pathname: '/login', search: '?redirect=join' });
   };
-
-  const onJoinMeeting = (joinMeetingData: JoinMeetingInput): void => {
-    runJoinMeetingMutation({ variables: joinMeetingData }).then((result) => {
-      authStore.setToken(result.data.token);
-      authStore.setViewer(result.data.signIn.user);
-    });
-  };
-
-  return <Landing onSignIn={onSignIn} onJoinMeeting={onJoinMeeting} other={runQuery} />;
+  return (
+    <div className="flex-column">
+      <div className="h1 text-center flex-column flex-x-center flex-y-center flex-1">Welcome to ZOOMED</div>
+      <div className="flex-8 pt-6 width-100p height-100p flex-row flex-x-center flex-y-center flex-space-around">
+        <div tabIndex={0} role="button" onMouseUp={onClickHost} className="pointer border-radius border width-250 height-250 hoverShadow flex-row flex-x-center flex-y-center">Host a meeting</div>
+        <div tabIndex={0} role="button" onMouseUp={onClickJoin} className="pointer border-radius border width-250 height-250 hoverShadow flex-row flex-x-center flex-y-center">Join a meeting</div>
+      </div>
+    </div>
+  );
 });
 
 export default LandingPage;
