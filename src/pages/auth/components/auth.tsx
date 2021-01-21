@@ -1,10 +1,6 @@
 import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -14,6 +10,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import SingleLineFormField from 'components/forms/SingleLineFormField';
 import { useForm } from 'react-final-form-hooks';
+import clsx from 'clsx';
+import { useState } from 'react';
 
 export interface SignInInput {
   email: string;
@@ -25,7 +23,7 @@ export interface JoinMeetingInput {
   meetingId: string;
 }
 
-interface LandingPageProps {
+interface LoginPageProps {
   onSignIn(input: SignInInput): any;
   onJoinMeeting(input: JoinMeetingInput): any;
   other(): any
@@ -43,47 +41,33 @@ const Copyright: React.FC = () => (
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
 }));
 
-const LandingPage:React.FC<LandingPageProps> = ({ other, onSignIn, onJoinMeeting }) => {
+const Auth:React.FC<LoginPageProps> = ({ other, onSignIn, onJoinMeeting }) => {
   const classes = useStyles();
+  const [isJoining, setIsJoining] = useState<boolean>(false);
   const { form: signInForm, handleSubmit: handleSignInSubmit, submitting: signInSubmitting } = useForm({ onSubmit: onSignIn });
   const { form: joinMeetingForm, handleSubmit: handleJoinMeetingSubmit, submitting: joinMeetingSubmitting } = useForm({ onSubmit: onJoinMeeting });
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
+      <div className="flex-column flex-y-center mt-8">
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSignInSubmit}>
+        <div className="h1 mb-1">
+          Welcome to ZOOMED
+        </div>
+        <form className={clsx({ hide: isJoining })} noValidate onSubmit={handleSignInSubmit}>
           <SingleLineFormField
             form={signInForm}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
@@ -98,35 +82,59 @@ const LandingPage:React.FC<LandingPageProps> = ({ other, onSignIn, onJoinMeeting
             name="password"
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            style={{ marginTop: 20, marginBottom: 20 }}
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2" onClick={other}>
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
         </form>
+        <form className={clsx({ hide: !isJoining })} noValidate onSubmit={handleJoinMeetingSubmit}>
+          <SingleLineFormField
+            form={joinMeetingForm}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Room ID"
+            name="roomId"
+            autoFocus
+          />
+          <SingleLineFormField
+            form={joinMeetingForm}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            name="passCode"
+            label="Pass Code (if any)"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ marginTop: 20, marginBottom: 20 }}
+          >
+            Join meeting
+          </Button>
+        </form>
+        <Grid container className="hoverShadow transition">
+          <Grid item xs>
+            <Link href="#" variant="body2" onClick={other}>
+              Forgot password?
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link href="#" variant="body2" onClick={() => setIsJoining((val) => !val)}>
+              Join a meeting
+            </Link>
+          </Grid>
+        </Grid>
       </div>
       <Box mt={8}>
         <Copyright />
@@ -135,4 +143,4 @@ const LandingPage:React.FC<LandingPageProps> = ({ other, onSignIn, onJoinMeeting
   );
 };
 
-export default LandingPage;
+export default Auth;

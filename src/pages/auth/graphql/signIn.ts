@@ -5,6 +5,8 @@ export default gql`mutation($input: SignInInput!){
         user{
             _id
             email
+            nickname
+            type
         }
         token
     }

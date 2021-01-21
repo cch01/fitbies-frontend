@@ -1,27 +1,24 @@
+import { Paper } from '@material-ui/core';
 import { useStores } from 'hooks/useStores';
+import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-interface TestProps {
-  test?: string
+interface routeState {
+  roomId: string;
 }
 
-const Test:React.FC<TestProps> = ({ test }) => {
+const Test:React.FC = () => {
   const { authStore } = useStores();
   const history = useHistory();
-  const location = useLocation();
-  useEffect(() => {
-    if (!authStore.isLoggedIn) {
-      history.push({
-        pathname: '/landing',
-        search: `?redirect=${encodeURIComponent(location.pathname + location.search)}`,
-      });
-    }
-  }, [authStore.isLoggedIn]);
+  const location = useLocation<routeState>();
+  if (_.isNil(location.state)) history.push('/landing');
+
   return (
-    <div>
-      HIHI,
-      {test}
+    <div className="max-width">
+      <Paper>
+        HIHI,
+      </Paper>
     </div>
   );
 };
