@@ -19,7 +19,7 @@ const JoinMeetingPage: React.FC = observer(() => {
     runJoinMeetingMutation({ variables: { joinMeetingInput: { meetingId, passCode, joinerId: viewer._id } } }).then(({ data }) => {
       console.log('join response', data);
       if (!_.isEmpty(data.joinMeeting.roomId)) {
-        history.push('/meeting', { roomId: data.joinMeeting.roomId });
+        history.push('/meeting', { roomId: data.joinMeeting.roomId, meetingId });
       }
     });
   };

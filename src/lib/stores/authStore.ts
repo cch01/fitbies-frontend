@@ -4,24 +4,24 @@ import {
 
 const expires = parseInt(process.env.REACT_APP_LOGIN_TOKEN_EXPIRY_DAY as string, 10);
 interface Viewer {
-  _id: string | null,
-  firstName: string | null,
-  lastName: string | null,
-  email: string | null,
-  type?: string | null,
-  nickName: string | null,
+  _id: string | undefined,
+  firstName: string | undefined,
+  lastName: string | undefined,
+  email: string | undefined,
+  type?: string | undefined,
+  nickName: string | undefined,
   isActivated: boolean,
 }
 class AuthStore {
   token = localStorage.getItem('access-token');
 
   viewer: Viewer = {
-    _id: null,
-    firstName: null,
-    lastName: null,
-    email: null,
-    type: null,
-    nickName: null,
+    _id: undefined,
+    firstName: undefined,
+    lastName: undefined,
+    email: undefined,
+    type: undefined,
+    nickName: undefined,
     isActivated: false,
   };
 
