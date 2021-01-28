@@ -9,6 +9,7 @@ import { useSubscription } from '@apollo/client';
 import { useUserMedia } from 'hooks/useUserMedia';
 // import { useUserMediaFromContext } from '@vardius/react-user-media';
 import { onError } from '@apollo/client/link/error';
+import LoadingScreen from 'components/loadingScreen';
 import Meeting from './components';
 import meetingChannel from './graphql/meetingChannel';
 import Video from './components/Video';
@@ -39,13 +40,17 @@ const MeetingPage: React.FC = () => {
 
   userMediaError && console.log('err', userMediaError);
 
-  const {
-    connectToPeer, closeConnection, closePeerConnection, peer, peerStreams,
-  } = useMeeting({
+  const { loading, result } = useMeeting({
     isInitiator, localMediaStream: stream!, targetId: roomId, userId,
   });
+  console.log('loading', loading);
+  useEffect(() => {
+    (!isInitiator && !loading && result) && result?.connectToPeer(roomId);
+  }, [result]);
 
-  // !isInitiator && connectToPeer(peer, roomId);
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   // const room = peer.connect(roomId, streamRef.current as MediaStream);
 
