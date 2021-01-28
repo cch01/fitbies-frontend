@@ -13,6 +13,7 @@ import LoadingScreen from 'components/loadingScreen';
 import Meeting from './components';
 import meetingChannel from './graphql/meetingChannel';
 import Video from './components/Video';
+import ParticipantList from './components/ParticipantList';
 
 interface MeetingPageStates {
   roomId: string;
@@ -26,36 +27,42 @@ const MeetingPage: React.FC = () => {
   useEffect(() => {
     (_.isNil(roomId || meetingId)) && history.push('/');
   });
-  console.log('rerender meeting page');
+  const count = useRef<number>(1);
+  console.warn('rerender meeting page', count.current + 1);
   const { authStore } = useStores();
   const userId = authStore.currentViewer._id!;
-  // const {
-  //   loading, data, error: meetingChannelError,
-  // } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
+  const {
+    data, error: meetingChannelError,
+  } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
 
-  // console.log(data);
+  useEffect(() => { console.log(data); }, [data]);
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({});
 
-  // userMediaError && console.log('err', userMediaError);
+  userMediaError && console.log('err', userMediaError);
 
-  // const { loading, result } = useMeeting({
-  //   isInitiator, localMediaStream: stream!, targetId: roomId, userId,
-  // });
-  // console.log('loading', loading);
-  // useEffect(() => {
-  //   (!isInitiator && !loading && result) && result?.connectToPeer(roomId);
-  // }, [result]);
+  const { loading: meetingLoading, result } = useMeeting({
+    streamLoading,
+    isInitiator,
+    localMediaStream: stream!,
+    targetId: roomId,
+    userId,
+  });
 
-  // if (loading) {
-  //   return <LoadingScreen />;
-  // }
+  useEffect(() => {
+    if (!isInitiator && !meetingLoading && result) {
+      console.log('fire');
+      result?.connectToPeer(roomId);
+    }
+  }, [meetingLoading]);
 
-  // const room = peer.connect(roomId, streamRef.current as MediaStream);
+  if (meetingLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <>
       <Video stream={stream} />
-      {/* {!streamLoading && <Video stream={stream} autoPlay />} */}
+      <ParticipantList peerStreams={result?.peerStreams!} />
     </>
   );
 };
