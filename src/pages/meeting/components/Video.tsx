@@ -15,9 +15,7 @@ const Video:React.FC<VideoProps> = ({
   const element = useRef<any>(null);
 
   useEffect(() => {
-    console.log('changed!');
     if (element.current && stream) {
-      console.log('have stream!');
       element.current.srcObject = stream;
     }
   }, [stream, element]);

@@ -17,7 +17,7 @@ const createApolloClient = (token: string | null, onUnauthorizedError: Function,
 
   return new ApolloClient({
     cache: new InMemoryCache({ addTypename: false }),
-    link: ApolloLink.from([authLink, splitLink, errorLink]),
+    link: ApolloLink.from([errorLink, authLink, splitLink]),
   });
 };
 
@@ -29,9 +29,10 @@ const createAuthLink = (token: string | null): ApolloLink => {
 };
 
 const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError(({
-  graphQLErrors, networkError = {} as any, operation, forward,
+  graphQLErrors, networkError, operation, forward,
 }) => {
   if (graphQLErrors) {
+    console.log('errorrrrr');
     graphQLErrors.forEach(({ message, locations, path }) => {
       // eslint-disable-next-line no-console
       console.error(`[GraphQL error]: ${message}`, {
@@ -42,7 +43,7 @@ const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError((
     });
   }
   if (networkError) {
-    const errorCode = networkError?.response?.status;
+    const errorCode = ((networkError as any).response).status;
     if (errorCode === 401) {
       onUnauthorizedError(networkError);
     } else {

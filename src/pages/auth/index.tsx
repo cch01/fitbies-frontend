@@ -23,12 +23,6 @@ const LoginPage:React.FC = observer(() => {
   console.log(meData);
   const client = useApolloClient();
 
-  const {
-    variables, loading, data, error,
-  } = useSubscription(subscriptionTest);
-
-  console.log('data', data);
-
   useEffect(() => { meData && authStore.setViewer(meData.me); }, [meData]);
 
   useEffect(() => {

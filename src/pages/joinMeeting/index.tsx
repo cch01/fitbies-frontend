@@ -12,7 +12,7 @@ const JoinMeetingPage: React.FC = observer(() => {
   const { authStore } = useStores();
   const viewer = authStore.currentViewer;
   const history = useHistory();
-  const [queries] = useQueryParams({ rid: StringParam, pass: StringParam });
+  const [queries] = useQueryParams({ mId: StringParam, pass: StringParam });
   const [runJoinMeetingMutation, { loading }] = useMutation(joinMeetingGQL);
 
   const onJoinMeeting = ({ meetingId, passCode }: JoinRoomInput) => {

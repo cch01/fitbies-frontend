@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {
   useEffect, useMemo, useRef, useState,
 } from 'react';
@@ -13,12 +14,13 @@ export const useUserMedia = (
 ) => {
   const [error, setError] = useState();
   const streamRef = useRef<MediaStream>();
-  navigator.mediaDevices.getUserMedia({ video: true, audio })
+  const [loading, setLoading] = useState(true);
+  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     .then((stream) => {
       if (stream) {
         streamRef.current = stream;
-        // vidRef.current && (vidRef.current.srcObject = stream);
+        setLoading(false);
       }
     }).catch((err) => { setError(err); });
-  return { error, streamRef };
+  return useMemo(() => ({ error, stream: streamRef.current, loading }), [loading]);
 };

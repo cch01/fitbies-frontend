@@ -38,7 +38,7 @@ export const useMeeting = ({
   });
   peer.on('open', (id) => {
     isInitiator
-      ? console.log(`this is initiator ${userId}, room and identity: ${id}`)
+      ? console.log(`this is initiator ${userId}, roomId: ${id}`)
       : console.log(`this is joiner ${userId}, identity: ${id}`);
   });
   peer.on('error', (error) => {
@@ -66,10 +66,11 @@ export const useMeeting = ({
     calls[id].close();
     setCalls((val) => _.omit(val, [id]));
   };
-  const connectToPeer = (designatedId: string):void => {
+  const connectToPeer = (userPeer: Peer, designatedId: string):void => {
     console.log(`Connecting to ${designatedId}...`);
-    const call = peer.call(designatedId, localMediaStream, { metadata: { connectorId: userId } });
-
+    console.log(userPeer);
+    const call = userPeer.call(designatedId, localMediaStream!, { metadata: { connectorId: userId } });
+    console.log(call);
     call.on('stream', (stream) => addVideoStream(stream, designatedId));
 
     call.on('close', () => {

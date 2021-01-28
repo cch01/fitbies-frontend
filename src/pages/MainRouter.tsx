@@ -9,30 +9,36 @@ import LoadingScreen from 'components/loadingScreen';
 
 const Meeting: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/meeting'));
 const JoinMeetingPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/joinMeeting'));
+const CreateMeetingPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/createMeeting'));
+const NotFound: React.FC = () => (<div>404 NOT FOUND.</div>);
 
-const ProtectedRouter: React.FC = observer(() => {
+const MainRouter: React.FC = observer(() => {
   const history = useHistory();
   const { authStore } = useStores();
   const location = useLocation();
   useEffect(() => {
-    if (!authStore.isLoggedIn) {
-      history.push({
-        pathname: '/landing',
-        search: location.pathname === '/' ? '' : `?redirect=${encodeURIComponent(location.pathname + location.search)}`,
-      });
+    if (location.pathname === '/') {
+      history.push('/landing');
     }
+    // if (!authStore.isLoggedIn) {
+    //   history.push({
+    //     pathname: '/login',
+    //     search: location.pathname === '/' ? '' : `?redirect=${encodeURIComponent(location.pathname + location.search)}`,
+    //   });
+    // }
   }, [authStore.isLoggedIn]);
   return (
     <Layout>
       <Suspense fallback={<LoadingScreen />}>
         <Switch>
           <Route path="/meeting" component={Meeting} />
+          <Route path="/host" component={CreateMeetingPage} />
           <Route path="/join" component={JoinMeetingPage} />
-          {/* <Route path="/host" component={Meeting} /> */}
+          <Route component={NotFound} />
         </Switch>
       </Suspense>
     </Layout>
   );
 });
 
-export default ProtectedRouter;
+export default MainRouter;

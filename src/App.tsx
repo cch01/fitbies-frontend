@@ -14,8 +14,8 @@ import LoadingScreen from 'components/loadingScreen';
 import AuthLayout from 'layout/authLayout';
 import { HelmetProvider } from 'react-helmet-async';
 import { StringParam, useQueryParam } from 'use-query-params';
-import ProtectedRouter from 'pages/protectedRouter';
-import UnProtectedRouter from 'pages/unProtectedRouter';
+import MainRouter from 'pages/MainRouter';
+import AuthRouter from 'pages/AuthRouter';
 
 const Landing: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/landing'));
 const Auth: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/auth'));
@@ -60,10 +60,9 @@ const App: React.FC = observer(() => {
       <HelmetProvider>
         <div className="App">
           <Switch>
-            <Route path="/landing" component={UnProtectedRouter} />
-            <Route path="/login" component={UnProtectedRouter} />
-            <Route path="/" component={ProtectedRouter} />
-            <Redirect to="/landing" />
+            <Route path="/landing" component={AuthRouter} />
+            <Route path="/login" component={AuthRouter} />
+            <Route path="/" component={MainRouter} />
           </Switch>
         </div>
       </HelmetProvider>

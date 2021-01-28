@@ -14,7 +14,7 @@ import AuthLayout from 'layout/authLayout';
 const Landing: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/landing'));
 const LoginPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/auth'));
 
-const UnProtectedRouter: React.FC = observer(() => (
+const AuthRouter: React.FC = observer(() => (
   <AuthLayout>
     <Suspense fallback={<LoadingScreen />}>
       <Switch>
@@ -25,4 +25,4 @@ const UnProtectedRouter: React.FC = observer(() => (
   </AuthLayout>
 ));
 
-export default UnProtectedRouter;
+export default AuthRouter;
