@@ -20,12 +20,6 @@ const MainRouter: React.FC = observer(() => {
     if (location.pathname === '/') {
       history.push('/landing');
     }
-    // if (!authStore.isLoggedIn) {
-    //   history.push({
-    //     pathname: '/login',
-    //     search: location.pathname === '/' ? '' : `?redirect=${encodeURIComponent(location.pathname + location.search)}`,
-    //   });
-    // }
   }, [authStore.isLoggedIn]);
   return (
     <Layout>

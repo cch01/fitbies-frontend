@@ -12,15 +12,18 @@ interface Constraints {
 export const useUserMedia = (
   { audio = true, width = 768, height = 1024 }:Constraints,
 ) => {
-  const [error, setError] = useState();
+  let error: Error;
   const streamRef = useRef<MediaStream>();
   const [loading, setLoading] = useState(true);
-  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then((stream) => {
-      if (stream) {
-        streamRef.current = stream;
-        setLoading(false);
-      }
-    }).catch((err) => { setError(err); });
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then((camStream) => {
+        if (camStream) {
+          streamRef.current = camStream;
+          setLoading(false);
+        }
+      }).catch((err) => { error = err; });
+  }, []);
   return useMemo(() => ({ error, stream: streamRef.current, loading }), [loading]);
 };

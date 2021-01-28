@@ -26,8 +26,7 @@ const MeetingPage: React.FC = () => {
   useEffect(() => {
     (_.isNil(roomId || meetingId)) && history.push('/');
   });
-  console.log(roomId);
-  console.log(meetingId);
+  console.log('rerender meeting page');
   const { authStore } = useStores();
   const userId = authStore.currentViewer._id!;
   // const {
@@ -35,28 +34,28 @@ const MeetingPage: React.FC = () => {
   // } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
 
   // console.log(data);
-
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({});
 
-  userMediaError && console.log('err', userMediaError);
+  // userMediaError && console.log('err', userMediaError);
 
-  const { loading, result } = useMeeting({
-    isInitiator, localMediaStream: stream!, targetId: roomId, userId,
-  });
-  console.log('loading', loading);
-  useEffect(() => {
-    (!isInitiator && !loading && result) && result?.connectToPeer(roomId);
-  }, [result]);
+  // const { loading, result } = useMeeting({
+  //   isInitiator, localMediaStream: stream!, targetId: roomId, userId,
+  // });
+  // console.log('loading', loading);
+  // useEffect(() => {
+  //   (!isInitiator && !loading && result) && result?.connectToPeer(roomId);
+  // }, [result]);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  // if (loading) {
+  //   return <LoadingScreen />;
+  // }
 
   // const room = peer.connect(roomId, streamRef.current as MediaStream);
 
   return (
     <>
-      {!streamLoading && <Video stream={stream} autoPlay />}
+      <Video stream={stream} />
+      {/* {!streamLoading && <Video stream={stream} autoPlay />} */}
     </>
   );
 };
