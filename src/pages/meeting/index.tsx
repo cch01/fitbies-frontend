@@ -68,6 +68,9 @@ const MeetingPage: React.FC = () => {
     <>
       <Video stream={stream} />
       <ParticipantList peerStreams={peerStreams!} />
+      <button onClick={closeConnection} type="button">Disconnect</button>
+      <button type="button" onClick={() => closePeerConnection('6003fe9c8c5bc400d1a13a07')}>Disconnect with cch02</button>
+      <button type="button" onClick={() => removeVideoStream('6003fe9c8c5bc400d1a13a07')}>remove stream of cch02</button>
     </>
   );
 };
