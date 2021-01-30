@@ -8,7 +8,6 @@ const PORT = parseInt(process.env.REACT_APP_PEER_SERVER_PORT!, 10) || undefined;
 const KEY = process.env.REACT_APP_PEER_SERVER_KEY;
 console.log('key, ', KEY);
 interface UsePeerProps {
-  streamLoading: boolean;
   userId: string;
   targetId: string;
   localMediaStream?: MediaStream;
@@ -38,7 +37,7 @@ export interface PeerStreams {
 }
 
 export const useMeeting = ({
-  isInitiator, localMediaStream, targetId, userId, streamLoading,
+  isInitiator, localMediaStream, targetId, userId,
 }: UsePeerProps): UseMeetingOutput => {
   const [peerStreams, setPeerStreams] = useState<PeerStreams>({});
   const [calls, setCalls] = useState<CallsState>({});

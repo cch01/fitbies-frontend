@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
 import { useSubscription } from '@apollo/client';
 import { useUserMedia } from 'hooks/useUserMedia';
-// import { useUserMediaFromContext } from '@vardius/react-user-media';
 import { onError } from '@apollo/client/link/error';
 import LoadingScreen from 'components/loadingScreen';
 import Meeting from './components';
@@ -32,28 +31,34 @@ const MeetingPage: React.FC = () => {
   const { authStore } = useStores();
   const userId = authStore.currentViewer._id!;
   const {
-    data, error: meetingChannelError,
+    data: meetingChannelData, error: meetingChannelError,
   } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
 
-  useEffect(() => { console.log(data); }, [data]);
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({});
 
   userMediaError && console.log('err', userMediaError);
 
-  const { loading: meetingLoading, result } = useMeeting({
-    streamLoading,
+  const { loading: meetingLoading, result: meetingResult } = useMeeting({
     isInitiator,
     localMediaStream: stream!,
     targetId: roomId,
     userId,
   });
 
+  const {
+    removeVideoStream, connectToPeer, closeConnection, closePeerConnection, peer, peerStreams,
+  } = meetingResult!;
+
   useEffect(() => {
-    if (!isInitiator && !meetingLoading && result) {
+    if (!isInitiator && !meetingLoading && meetingResult) {
       console.log('fire');
-      result?.connectToPeer(roomId);
+      connectToPeer(roomId);
     }
   }, [meetingLoading]);
+
+  useEffect(() => {
+
+  }, [meetingChannelData]);
 
   if (meetingLoading) {
     return <LoadingScreen />;
@@ -62,7 +67,7 @@ const MeetingPage: React.FC = () => {
   return (
     <>
       <Video stream={stream} />
-      <ParticipantList peerStreams={result?.peerStreams!} />
+      <ParticipantList peerStreams={peerStreams!} />
     </>
   );
 };
