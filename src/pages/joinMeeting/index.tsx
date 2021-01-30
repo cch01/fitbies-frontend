@@ -9,7 +9,7 @@ import JoinMeeting, { JoinRoomInput } from './components/joinMeeting';
 import joinMeetingGQL from './graphql/joinMeeting';
 
 const JoinMeetingPage: React.FC = observer(() => {
-  const { authStore } = useStores();
+  const { authStore, meetingStore } = useStores();
   const viewer = authStore.currentViewer;
   const history = useHistory();
   const [queries] = useQueryParams({ mId: StringParam, pass: StringParam });
@@ -19,6 +19,7 @@ const JoinMeetingPage: React.FC = observer(() => {
     runJoinMeetingMutation({ variables: { joinMeetingInput: { meetingId, passCode, joinerId: viewer._id } } }).then(({ data }) => {
       console.log('join response', data);
       if (!_.isEmpty(data.joinMeeting.roomId)) {
+        meetingStore.setMeeting(data.joinMeeting, viewer._id!);
         history.push('/meeting', { roomId: data.joinMeeting.roomId, meetingId });
       }
     });

@@ -8,7 +8,7 @@ import CreateMeeting, { CreateMeetingInput } from './components/CreateMeeting';
 import createMeetingGQL from './graphql/CreateMeeting';
 
 const CreateMeetingPage: React.FC = observer(() => {
-  const { authStore, uiStore } = useStores();
+  const { authStore, uiStore, meetingStore } = useStores();
   uiStore.setTitle('Host meeting');
   const viewer = authStore.currentViewer;
   const history = useHistory();
@@ -18,6 +18,7 @@ const CreateMeetingPage: React.FC = observer(() => {
     runJoinMeetingMutation({ variables: { createMeetingInput: { passCode, initiatorId: viewer._id } } }).then(({ data }) => {
       console.log('create meeting response', data);
       if (!_.isEmpty(data.createMeeting.roomId)) {
+        meetingStore.setMeeting(data.createMeeting, viewer._id!);
         history.push('/meeting', {
           roomId: data.createMeeting.roomId,
           isInitiator: true,

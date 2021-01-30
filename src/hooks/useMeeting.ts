@@ -11,39 +11,23 @@ interface UsePeerProps {
   userId: string;
   targetId: string;
   localMediaStream?: MediaStream;
-  isInitiator: boolean
+  isInitiator: boolean;
+  addVideoStream: (connectorId: string, stream: MediaStream) => void;
+  addCallObject: (userId: string, call: Peer.MediaConnection) => void;
+  onPeerConnected: (peer: Peer) => void;
 }
 
-interface CallsState{
-  [x:string]: Peer.MediaConnection
-}
-
-interface UseMeetingResult {
-  removeVideoStream:(id: string) => void;
-  connectToPeer: (designatedId: string) => void;
-  closeConnection: () => void;
-  closePeerConnection: (id: string) => void;
-  peer: Peer | undefined;
-  peerStreams: PeerStreams,
-
-}
 interface UseMeetingOutput {
   loading: boolean;
-  result?: UseMeetingResult
-}
-
-export interface PeerStreams {
-  [x:string]: MediaStream
+  peer: Peer | undefined;
 }
 
 export const useMeeting = ({
-  isInitiator, localMediaStream, targetId, userId,
+  isInitiator, localMediaStream, targetId, userId, addVideoStream, addCallObject, onPeerConnected,
 }: UsePeerProps): UseMeetingOutput => {
-  const [peerStreams, setPeerStreams] = useState<PeerStreams>({});
-  const [calls, setCalls] = useState<CallsState>({});
   const [loading, setLoading] = useState(true);
   const [peer, setPeer] = useState<Peer>();
-  // creating identity
+
   const peerId = isInitiator ? targetId : userId;
   useEffect(() => {
     if (!_.isEmpty(localMediaStream?.id)) {
@@ -52,16 +36,14 @@ export const useMeeting = ({
         key: KEY, host: 'localhost', path: '/meetings', port: PORT,
       }));
     }
+    return peer?.destroy();
   }, [localMediaStream?.id]);
-
-  const addVideoStream = (stream: MediaStream, connectorId: string) => {
-    setPeerStreams((val) => ({ ...val, [connectorId]: stream }));
-  };
 
   peer?.on('open', (id) => {
     isInitiator
       ? console.log(`this is initiator ${userId}, roomId: ${id}`)
       : console.log(`this is joiner ${userId}, identity: ${id}`);
+    onPeerConnected(peer);
     setLoading(false);
   });
   peer?.on('error', (error) => {
@@ -77,52 +59,16 @@ export const useMeeting = ({
     console.log(`${connectorId} is connected`);
     call.on('stream', (stream) => {
       console.log('stream', stream);
-      addVideoStream(stream, connectorId);
+      addVideoStream(connectorId, stream);
     });
     call.on('close', () => {
       console.log(`Media streaming with ${connectorId} closed!`);
     });
-    setCalls((val) => ({ ...val, ...{ [connectorId]: call } }));
+    addCallObject(connectorId, call);
   });
-
-  const closeConnection = useMemo(() => (): void => { peer?.destroy(); }, [peer]);
-
-  const removeVideoStream = (id: string) => {
-    setPeerStreams((val) => _.omit(val, [id]));
-  };
-
-  const closePeerConnection = useMemo(() => (id: string): void => {
-    console.log(`closing media connection with ${id}`);
-    calls[id].close();
-    removeVideoStream(id);
-    setCalls((val) => _.omit(val, [id]));
-  }, [calls]);
-
-  const connectToPeer = useMemo(() => (designatedId: string):void => {
-    console.log(`Connecting to ${designatedId}...`);
-    const call = peer!.call(designatedId, localMediaStream!, { metadata: { connectorId: userId } });
-    console.log(call);
-    call!.on('stream', (stream) => {
-      console.log('stream coming');
-      addVideoStream(stream, designatedId);
-    });
-
-    call!.on('close', () => {
-      console.log(`media stream connection with ${designatedId} closed`);
-      removeVideoStream(designatedId);
-    });
-
-    call!.on('error', () => {
-      console.log(`error occurred with ${designatedId} `);
-      removeVideoStream(designatedId);
-    });
-    setCalls((val) => ({ ...val, ...{ [designatedId]: call } }));
-  }, [peer]);
 
   return {
     loading,
-    result: {
-      removeVideoStream, connectToPeer, closeConnection, closePeerConnection, peer, peerStreams,
-    },
+    peer,
   };
 };

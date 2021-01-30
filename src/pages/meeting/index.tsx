@@ -7,9 +7,8 @@ import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
 import { useSubscription } from '@apollo/client';
 import { useUserMedia } from 'hooks/useUserMedia';
-import { onError } from '@apollo/client/link/error';
 import LoadingScreen from 'components/loadingScreen';
-import Meeting from './components';
+import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
 import Video from './components/Video';
 import ParticipantList from './components/ParticipantList';
@@ -20,7 +19,7 @@ interface MeetingPageStates {
   isInitiator?: boolean
 }
 
-const MeetingPage: React.FC = () => {
+const MeetingPage: React.FC = observer(() => {
   const history = useHistory();
   const { roomId, meetingId, isInitiator = false } = useLocation<MeetingPageStates>().state;
   useEffect(() => {
@@ -28,7 +27,7 @@ const MeetingPage: React.FC = () => {
   });
   const count = useRef<number>(1);
   console.warn('rerender meeting page', count.current + 1);
-  const { authStore } = useStores();
+  const { authStore, meetingStore } = useStores();
   const userId = authStore.currentViewer._id!;
   const {
     data: meetingChannelData, error: meetingChannelError,
@@ -37,27 +36,31 @@ const MeetingPage: React.FC = () => {
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({});
 
   userMediaError && console.log('err', userMediaError);
-
-  const { loading: meetingLoading, result: meetingResult } = useMeeting({
+  console.log('meetingId', meetingStore.meetingId);
+  const { loading: meetingLoading } = useMeeting({
     isInitiator,
     localMediaStream: stream!,
     targetId: roomId,
     userId,
+    addVideoStream: meetingStore.addVideoStream,
+    addCallObject: meetingStore.addCallObject,
+    onPeerConnected: (peer) => meetingStore.setPeer(peer),
   });
 
-  const {
-    removeVideoStream, connectToPeer, closeConnection, closePeerConnection, peer, peerStreams,
-  } = meetingResult!;
-
   useEffect(() => {
-    if (!isInitiator && !meetingLoading && meetingResult) {
-      console.log('fire');
-      connectToPeer(roomId);
+    console.log('peer changed!!!');
+    if (!isInitiator && meetingStore.peer && stream) {
+      console.log('fire connection');
+      meetingStore.connectToPeer(roomId, stream);
+      meetingStore.getJoinerIds(userId)
+        .map((id) => meetingStore.connectToPeer(id, stream));
     }
-  }, [meetingLoading]);
+  }, [meetingStore.peer]);
 
   useEffect(() => {
-
+    if (meetingChannelData.meetingChannel) {
+      meetingStore;
+    }
   }, [meetingChannelData]);
 
   if (meetingLoading) {
@@ -67,12 +70,11 @@ const MeetingPage: React.FC = () => {
   return (
     <>
       <Video stream={stream} />
-      <ParticipantList peerStreams={peerStreams!} />
-      <button onClick={closeConnection} type="button">Disconnect</button>
-      <button type="button" onClick={() => closePeerConnection('6003fe9c8c5bc400d1a13a07')}>Disconnect with cch02</button>
-      <button type="button" onClick={() => removeVideoStream('6003fe9c8c5bc400d1a13a07')}>remove stream of cch02</button>
+      <ParticipantList peerStreams={meetingStore.joinersStreams!} />
+      <button type="button" onClick={() => meetingStore.disconnectPeer('6003fe9c8c5bc400d1a13a07')}>Disconnect with cch02</button>
+      <button type="button" onClick={() => meetingStore.removeVideoStream('6003fe9c8c5bc400d1a13a07')}>remove stream of cch02</button>
     </>
   );
-};
+});
 
 export default MeetingPage;

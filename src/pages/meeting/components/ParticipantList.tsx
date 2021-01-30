@@ -1,10 +1,9 @@
 import React from 'react';
-import { PeerStreams } from 'hooks/useMeeting';
 import styles from './ParticipantList.module.scss';
 import Participant from './Participant';
 
 interface ParticipantListProps {
-  peerStreams: PeerStreams;
+  peerStreams: {[x: string]: MediaStream};
 }
 
 const ParticipantList: React.FC<ParticipantListProps> = ({ peerStreams }) => (

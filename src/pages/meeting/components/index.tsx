@@ -1,11 +1,10 @@
-import { PeerStreams } from 'hooks/useMeeting';
 import React from 'react';
 import ParticipantList from './ParticipantList';
 import Video from './Video';
 
 interface MeetingProps {
   localStream: MediaStream;
-  peerStreams: PeerStreams;
+  peerStreams: {[x: string]: MediaStream};
 }
 
 const Meeting: React.FC<MeetingProps> = ({ localStream, peerStreams }) => (

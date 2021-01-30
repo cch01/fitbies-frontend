@@ -13,6 +13,7 @@ subscription($userId: ID!, $meetingId: ID!) {
       _id
       initiator{
         _id
+        nickname
         email
       }
     }
