@@ -5,15 +5,13 @@ export default gql`mutation($createMeetingInput: CreateMeetingInput!){
       _id
       roomId
       initiator{
-          _id
-          firstName
-          lastName
-          email
-          type
+        _id
+        nickname
       }
       participants{
           _id
-          joinedAt
+          nickname
+          isLeft
       }
       passCode
       endedAt

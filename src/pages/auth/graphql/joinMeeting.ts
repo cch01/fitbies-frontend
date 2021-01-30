@@ -5,17 +5,16 @@ export default gql`mutation($joinMeetingInput: JoinMeetingInput!){
       _id
       initiator{
           _id
+          nickname
           firstName
           lastName
           email
       }
       participants{
           _id
-          approvedAt
           leftAt
           isLeft
       }
-      meetingInvitationToken 
       endedAt
       needApproval
   }
