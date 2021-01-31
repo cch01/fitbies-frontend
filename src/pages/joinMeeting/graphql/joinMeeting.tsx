@@ -6,7 +6,11 @@ export default gql`mutation($joinMeetingInput: JoinMeetingInput!){
       initiator{
           _id
           nickname
-          email
+      }
+      participants{
+        _id
+        isLeft
+        nickname
       }
       roomId
       endedAt

@@ -4,59 +4,49 @@ import {
 
 const expires = parseInt(process.env.REACT_APP_LOGIN_TOKEN_EXPIRY_DAY as string, 10);
 interface Viewer {
-  _id: string | null,
-  firstName: string | null,
-  lastName: string | null,
-  email: string | null,
-  type?: string | null,
-  nickName: string | null,
-  isActivated: boolean,
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  type?: string;
+  nickName?: string;
+  isActivated: boolean;
 }
 class AuthStore {
-  token = localStorage.getItem('access-token');
+  @observable token = localStorage.getItem('access-token');
 
+  @observable
   viewer: Viewer = {
-    _id: null,
-    firstName: null,
-    lastName: null,
-    email: null,
-    type: null,
-    nickName: null,
+    _id: undefined,
+    firstName: undefined,
+    lastName: undefined,
+    email: undefined,
+    type: undefined,
+    nickName: undefined,
     isActivated: false,
   };
 
-  get currentToken(): string | null { return toJS(this.token); }
-
-  get currentViewer(): Viewer { return toJS(this.viewer); }
-
+  @action
   setToken = (newToken: string) => {
     localStorage.setItem('access-token', newToken);
     this.token = localStorage.getItem('access-token');
   }
 
+  @action
   setViewer(viewer: Viewer): void {
     this.viewer = viewer;
   }
 
+  @action
   logout = () => {
     localStorage.removeItem('access-token');
     this.token = localStorage.getItem('access-token');
   }
 
+  @computed
   get isLoggedIn(): boolean {
-    return !!this.currentViewer._id;
+    return !!this.viewer._id;
   }
 }
-
-decorate(AuthStore, {
-  currentToken: computed,
-  isLoggedIn: computed,
-  token: observable,
-  setToken: action,
-  viewer: observable,
-  setViewer: action,
-  currentViewer: computed,
-  logout: action,
-} as any);
 
 export default AuthStore;

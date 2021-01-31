@@ -3,13 +3,13 @@ import {
 } from 'mobx';
 
 class UIStore {
+  @observable
   title='';
 
+  @action
   setTitle(title: string) {
     this.title = title;
   }
 }
-
-decorate(UIStore, { title: observable, setTitle: action });
 
 export default UIStore;

@@ -7,9 +7,11 @@ import { useHistory } from 'react-router-dom';
 const LandingPage: React.FC = observer(() => {
   const history = useHistory();
   const { authStore } = useStores();
-  const onClickHost:any = () => history.push('/auth');
+  const onClickHost:any = () => {
+    history.push('/host');
+  };
   const onClickJoin:any = () => {
-    authStore.isLoggedIn ? history.push('/join') : history.push({ pathname: '/login', search: '?redirect=join' });
+    history.push('/join');
   };
   return (
     <div className="flex-column">

@@ -9,15 +9,12 @@ const Layout:React.FC<{ children: React.ReactNode}> = observer(({ children }) =>
   const { uiStore: { title }, authStore } = useStores();
   const history = useHistory();
   const location = useLocation();
-  // useEffect(() => {
-  console.log(location);
   if (!authStore.isLoggedIn) {
     history.push({
       pathname: '/login',
       search: location.search === '/' ? '' : `?redirect=${encodeURIComponent(location.pathname + location.search)}`,
     });
   }
-  // });
 
   return (
     <>

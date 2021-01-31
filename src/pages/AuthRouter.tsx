@@ -11,28 +11,10 @@ import { useStores } from 'hooks/useStores';
 import LoadingScreen from 'components/loadingScreen';
 import AuthLayout from 'layout/authLayout';
 
-// const id = (Math.random()*50).toString()
-// console.log('id',id)
-// const peer = new Peer(id, {host:'localhost', path:"/rooms", port: 3001 });
-// const conn = peer.connect('another-peers-id');
-// conn.on('open', () => {
-//   conn.send('hi x 2!!, I am '+id);
-// });
-
-// peer.on('connection', (conn) => {
-//   conn.on('data', (data) => {
-//     // Will print 'hi!'
-//     console.log(data);
-//   });
-//   conn.on('open', () => {
-//     conn.send('hello! me is '+id);
-//   });
-// });
-
 const Landing: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/landing'));
 const LoginPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/auth'));
 
-const UnProtectedRouter: React.FC = observer(() => (
+const AuthRouter: React.FC = observer(() => (
   <AuthLayout>
     <Suspense fallback={<LoadingScreen />}>
       <Switch>
@@ -43,4 +25,4 @@ const UnProtectedRouter: React.FC = observer(() => (
   </AuthLayout>
 ));
 
-export default UnProtectedRouter;
+export default AuthRouter;
