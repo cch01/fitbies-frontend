@@ -17,9 +17,13 @@ const MeetingPage: React.FC = observer(() => {
   const history = useHistory();
 
   const count = useRef<number>(1);
-  console.warn('rerender meeting page', count.current + 1);
-  const { authStore, meetingStore } = useStores();
-  const { meetingId, roomId, isInitiator } = meetingStore;
+  // eslint-disable-next-line no-plusplus
+  console.warn('rerender meeting page', count.current++);
+  const { authStore, meetingStore, uiStore } = useStores();
+  uiStore.setTitle(`Meeting with ${meetingStore.initiator?.nickname}`);
+  const {
+    meetingId, roomId, isInitiator, currentMessages, currentParticipants,
+  } = meetingStore;
   useEffect(() => {
     (_.isNil(roomId || meetingId)) && history.push('/landing');
   });
@@ -48,15 +52,23 @@ const MeetingPage: React.FC = observer(() => {
       console.log('fire connection');
       meetingStore.connectToPeer(roomId!, stream);
       meetingStore.getJoinerIds(userId)
-        .map((id) => meetingStore.connectToPeer(id, stream));
+        .forEach((id) => meetingStore.connectToPeer(id, stream));
     }
   }, [meetingStore.peer]);
 
   useEffect(() => {
     if (meetingChannelData?.meetingChannel) {
-      meetingStore;
+      console.log('channel event come!');
+      meetingStore.eventDispatcher(meetingChannelData.meetingChannel);
     }
   }, [meetingChannelData]);
+
+  useEffect(() => {
+    if (!_.isEmpty(currentMessages)) {
+      console.log('new message!');
+      console.log(currentMessages);
+    }
+  }, [currentMessages]);
 
   if (meetingLoading) {
     return <LoadingScreen />;

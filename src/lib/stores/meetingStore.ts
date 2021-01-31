@@ -73,7 +73,16 @@ class MeetingStore {
 
   @observable joinersCallsObjects: {[x:string]: Peer.MediaConnection} = {};
 
+  @computed get currentMessages(): Message[] {
+    return toJS(this.messages);
+  }
+
+  @computed get currentParticipants(): User[] {
+    return toJS(this.participants);
+  }
+
   @action reset():void {
+    console.log('reset meeting store');
     this.meetingId = undefined;
     this.userId = undefined;
     this.roomId = undefined;
@@ -165,7 +174,7 @@ class MeetingStore {
     }
   }
 
-  @action actionDispatcher(meetingChannelInput: MeetingChannelInput): void {
+  @action eventDispatcher(meetingChannelInput: MeetingChannelInput): void {
     const { from } = meetingChannelInput;
     const { toMeeting, userToBeKickedOut, message } = meetingChannelInput;
     if (toMeeting._id !== this.meetingId) return;
