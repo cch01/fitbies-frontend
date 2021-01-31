@@ -112,7 +112,7 @@
 }
 
 @include mobile {
-	@for $i from 0 through 9 {
+	@for $i from 0 through 15 {
 			.mwidth-#{$i * 10}p {
 					width: 0% + $i * 10;
 			}
@@ -124,8 +124,8 @@
 			.mheight-#{$i * 10}p {
 					height: 0% + $i * 10;
 			}
-			.mheight-#{$i * 10} {
-					height: $i * 10px;
+			.mheight-#{$i * 50} {
+					height: $i * 50px;
 			}
 	}
 }

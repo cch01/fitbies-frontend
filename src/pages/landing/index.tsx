@@ -1,9 +1,10 @@
+import clsx from 'clsx';
 import { useStores } from 'hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import styles from './index.module.scss';
 
-// TODO: fix shadow problem, split class to class module
 const LandingPage: React.FC = observer(() => {
   const history = useHistory();
   const { authStore } = useStores();
@@ -15,10 +16,10 @@ const LandingPage: React.FC = observer(() => {
   };
   return (
     <div className="flex-column">
-      <div className="h1 text-center flex-column flex-x-center flex-y-center flex-1">Welcome to ZOOMED</div>
-      <div className="flex-8 pt-6 width-100p height-100p flex-row flex-x-center flex-y-center flex-space-around">
-        <div tabIndex={0} role="button" onMouseUp={onClickHost} className="pointer border-radius border width-250 height-250 hoverShadow flex-row flex-x-center flex-y-center">Host a meeting</div>
-        <div tabIndex={0} role="button" onMouseUp={onClickJoin} className="pointer border-radius border width-250 height-250 hoverShadow flex-row flex-x-center flex-y-center">Join a meeting</div>
+      <div className={styles.title}>Welcome to ZOOMED</div>
+      <div className={styles.tileContainer}>
+        <div tabIndex={0} role="button" onMouseUp={onClickHost} className={clsx('mr-2', styles.tile)}>Host a meeting</div>
+        <div tabIndex={0} role="button" onMouseUp={onClickJoin} className={clsx('ml-2', styles.tile)}>Join a meeting</div>
       </div>
     </div>
   );
