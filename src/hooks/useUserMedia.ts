@@ -24,7 +24,6 @@ export const useUserMedia = (
           setLoading(false);
         }
       }).catch((err) => { error = err; });
-    return streamRef.current?.getTracks().forEach((track) => track.stop());
   }, []);
   return useMemo(() => ({ error, stream: streamRef.current, loading }), [loading]);
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import Video from './Video';
+import Video from './video';
 
 const Participant: React.FC<ParticipantProps> = ({ stream, ...props }) => {
   if (!stream) {

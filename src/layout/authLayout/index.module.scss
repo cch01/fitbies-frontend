@@ -11,10 +11,12 @@
 }
 
 .mainContainer{
-  width: 960px;
-  height: 540px;
+  @include desktop {
+    min-width: 1280px;
+    height: 720px;
+  }
+  @extend .px-6;
   background-color: $white;
-  @extend .max-width-80vw;
   @extend .max-height-80vh;
   @extend .border-radius;
   @extend .shadow;

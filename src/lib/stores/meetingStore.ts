@@ -16,7 +16,7 @@ enum MessageType {
   CHAT
 }
 
-interface Message {
+export interface Message {
   type?: MessageType;
   userId?: string;
   content: string;

@@ -11,12 +11,13 @@ export interface SingleLineFormFieldProps {
   margin?: 'normal' | 'none' | 'dense' | undefined;
   type?: any;
   hidden?: boolean;
+  variant?: 'outlined' | 'standard' | 'filled';
   onChange?: (event: any) => void;
   [x:string]: any;
 }
 
 const SingleLineFormField:React.FC<SingleLineFormFieldProps> = ({
-  form, name, label, margin = 'normal', type = 'text', hidden, onChange, ...props
+  form, name, label, margin = 'normal', type = 'text', hidden, onChange, variant = 'outlined', ...props
 }: SingleLineFormFieldProps) => {
   const field = useField(name, form);
   const _onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
@@ -44,7 +45,7 @@ const SingleLineFormField:React.FC<SingleLineFormFieldProps> = ({
       fullWidth
       type={type}
       size="small"
-      variant="outlined"
+      variant={variant}
       error={!!field.meta.touched && !!field.meta.error}
       helperText={(field.meta.touched) ? field.meta.error : null}
       {...props}
