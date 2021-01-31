@@ -1,0 +1,32 @@
+@import "styles/app.scss";
+.tileContainer {
+  @extend .flex-8;
+  @extend .width-100p;
+  @extend .height-100p;
+  @extend .flex-row;
+  @extend .flex-x-center;
+  @extend .flex-y-center;
+  @extend .flex-space-around;
+}
+.tile {
+  @extend .text-center;
+  @extend .pointer;
+  @extend .border-radius;
+  @extend .border;
+  @extend .width-250;
+  @extend .height-250;
+  @extend .hoverShadow;
+  @extend .flex-row;
+  @extend .flex-x-center ;
+  @extend .flex-y-center;
+  @extend .twidth-200;
+  @extend .theight-200;
+  @extend .mwidth-150;
+  @extend .mheight-150;
+}
+
+.title {
+  @extend .h1;
+  @extend .text-center;
+  @extend .pt-3;
+}
