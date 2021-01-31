@@ -13,22 +13,17 @@ import meetingChannel from './graphql/meetingChannel';
 import Video from './components/Video';
 import ParticipantList from './components/ParticipantList';
 
-interface MeetingPageStates {
-  roomId: string;
-  meetingId: string;
-  isInitiator?: boolean
-}
-
 const MeetingPage: React.FC = observer(() => {
   const history = useHistory();
-  const { roomId, meetingId, isInitiator = false } = useLocation<MeetingPageStates>().state;
-  useEffect(() => {
-    (_.isNil(roomId || meetingId)) && history.push('/');
-  });
+
   const count = useRef<number>(1);
   console.warn('rerender meeting page', count.current + 1);
   const { authStore, meetingStore } = useStores();
-  const userId = authStore.currentViewer._id!;
+  const { meetingId, roomId, isInitiator } = meetingStore;
+  useEffect(() => {
+    (_.isNil(roomId || meetingId)) && history.push('/landing');
+  });
+  const userId = authStore.viewer._id!;
   const {
     data: meetingChannelData, error: meetingChannelError,
   } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
@@ -40,7 +35,7 @@ const MeetingPage: React.FC = observer(() => {
   const { loading: meetingLoading } = useMeeting({
     isInitiator,
     localMediaStream: stream!,
-    targetId: roomId,
+    targetId: roomId!,
     userId,
     addVideoStream: meetingStore.addVideoStream,
     addCallObject: meetingStore.addCallObject,
@@ -51,14 +46,14 @@ const MeetingPage: React.FC = observer(() => {
     console.log('peer changed!!!');
     if (!isInitiator && meetingStore.peer && stream) {
       console.log('fire connection');
-      meetingStore.connectToPeer(roomId, stream);
+      meetingStore.connectToPeer(roomId!, stream);
       meetingStore.getJoinerIds(userId)
         .map((id) => meetingStore.connectToPeer(id, stream));
     }
   }, [meetingStore.peer]);
 
   useEffect(() => {
-    if (meetingChannelData.meetingChannel) {
+    if (meetingChannelData?.meetingChannel) {
       meetingStore;
     }
   }, [meetingChannelData]);

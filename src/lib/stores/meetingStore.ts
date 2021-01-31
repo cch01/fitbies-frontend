@@ -2,9 +2,8 @@ import _ from 'lodash';
 import {
   toJS, observable, computed, action, decorate,
 } from 'mobx';
-import meetingChannel from 'pages/meeting/graphql/meetingChannel';
 import Peer from 'peerjs';
-
+// TODO split components to substores!!!
 interface User {
   _id: string;
   nickname: string;
@@ -54,6 +53,8 @@ interface MeetingChannelInput {
 
 // Scope: only handle channel stuff, not streaming
 class MeetingStore {
+  @observable isInitiator: boolean = false;
+
   @observable meetingId?: string;
 
   @observable userId?: string;
@@ -90,6 +91,7 @@ class MeetingStore {
     this.initiator = meetingInput.initiator;
     this.participants = meetingInput.participants;
     this.userId = userId;
+    this.isInitiator = meetingInput.initiator._id === userId;
   }
 
   @action setPeer(peer: Peer): void {

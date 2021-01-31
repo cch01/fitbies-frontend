@@ -10,7 +10,7 @@ import createMeetingGQL from './graphql/CreateMeeting';
 const CreateMeetingPage: React.FC = observer(() => {
   const { authStore, uiStore, meetingStore } = useStores();
   uiStore.setTitle('Host meeting');
-  const viewer = authStore.currentViewer;
+  const { viewer } = authStore;
   const history = useHistory();
   const [runJoinMeetingMutation, { loading }] = useMutation(createMeetingGQL);
 
@@ -19,11 +19,7 @@ const CreateMeetingPage: React.FC = observer(() => {
       console.log('create meeting response', data);
       if (!_.isEmpty(data.createMeeting.roomId)) {
         meetingStore.setMeeting(data.createMeeting, viewer._id!);
-        history.push('/meeting', {
-          roomId: data.createMeeting.roomId,
-          isInitiator: true,
-          meetingId: data.createMeeting._id,
-        });
+        history.push('/meeting');
       }
     });
   };
