@@ -10,8 +10,6 @@ import { useUserMedia } from 'hooks/useUserMedia';
 import LoadingScreen from 'components/loadingScreen';
 import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
-import Video from './components/video';
-import ParticipantList from './components/participantList';
 import Meeting from './components/meeting';
 
 const MeetingPage: React.FC = observer(() => {
@@ -39,7 +37,7 @@ const MeetingPage: React.FC = observer(() => {
     data: meetingChannelData, error: meetingChannelError,
   } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
 
-  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({});
+  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
 
   userMediaError && console.log('err', userMediaError);
   console.log('meetingId', meetingStore.meetingId);

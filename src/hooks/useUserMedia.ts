@@ -17,13 +17,16 @@ export const useUserMedia = (
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    navigator.mediaDevices.getUserMedia({
+      video: { width, height }, audio: false,
+    })
       .then((camStream) => {
         if (camStream) {
           streamRef.current = camStream;
           setLoading(false);
         }
       }).catch((err) => { error = err; });
+    return streamRef.current?.getTracks().forEach((track) => track.stop());
   }, []);
   return useMemo(() => ({ error, stream: streamRef.current, loading }), [loading]);
 };

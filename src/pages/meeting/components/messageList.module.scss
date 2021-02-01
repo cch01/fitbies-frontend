@@ -1,0 +1,57 @@
+@import "styles/app.scss";
+
+
+.chat-bubble {
+  width: 250px;
+  margin: 10px auto;
+  @extend .border-radius-sm;
+  background: #00bfb6;
+  color: #fff;
+  @extend .p3;
+  @extend .text-left;
+  @extend .text-middle;
+  font-weight: 700;
+  word-wrap: break-word;
+}
+
+.system-msg {
+  @extend .width-250;
+  margin: 5px auto;
+  @extend .border-radius-sm;
+  @extend .bg-grey-e;
+  @extend .black;
+  @extend .px-2;
+  @extend .py-1;
+  @extend .text-center;
+  @extend .text-middle;
+  font-weight: 500;
+  word-wrap: break-word;
+}
+
+.self-msg:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 15px solid #00bfb6;
+  border-right: 15px solid transparent;
+  border-top: 15px solid #00bfb6;
+  border-bottom: 15px solid transparent;
+  right: -16px;
+  top: 0px;
+}
+
+
+
+.team-msg:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 15px solid transparent;
+  border-right: 15px solid #00bfb6;
+  border-top: 15px solid #00bfb6;
+  border-bottom: 15px solid transparent;
+  left: -16px;
+  top: 0px;
+}

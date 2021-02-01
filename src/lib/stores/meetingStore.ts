@@ -11,14 +11,16 @@ interface User {
   email?: string;
 }
 
-enum MessageType {
+export enum MessageType {
   SYSTEM,
-  CHAT
+  TEAM_CHAT,
+  SELF_CHAT
 }
 
 export interface Message {
   type?: MessageType;
-  userId?: string;
+  senderId?: string;
+  nickname?: string;
   content: string;
   sentAt: Date;
 }
@@ -226,7 +228,14 @@ class MeetingStore {
         break;
 
       case MeetingEventType.MESSAGE:
-        this.messages.push({ ...message!, type: MessageType.CHAT, userId: from._id });
+        this.messages.push({
+          ...message!,
+          type: from._id === this.userId
+            ? MessageType.SELF_CHAT
+            : MessageType.TEAM_CHAT,
+          senderId: from._id,
+          nickname: from.nickname,
+        });
         break;
 
       default:

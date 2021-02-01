@@ -27,7 +27,7 @@ const LoginPage:React.FC = observer(() => {
 
   useEffect(() => {
     if (authStore.isLoggedIn) {
-      history.push(decodeURIComponent(redirect as string) ?? '/');
+      history.replace(decodeURIComponent(redirect as string) ?? '/');
     }
   }, [authStore.isLoggedIn]);
 

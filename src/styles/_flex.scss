@@ -27,13 +27,13 @@
 .flex-space-around  { justify-content: space-around;  }
 .flex-space-evenly  { justify-content: space-evenly;  }
 
-.self-flex-x-start { justify-self: start; }
+.self-flex-x-start { justify-self: flex-start; }
 .self-flex-x-center { justify-self: center; }
-.self-flex-x-end { justify-self: end; }
+.self-flex-x-end { justify-self: flex-end; }
 
-.self-flex-y-start { align-self: start; }
+.self-flex-y-start { align-self: flex-start; }
 .self-flex-y-center { align-self: center; }
-.self-flex-y-end { align-self: end; }
+.self-flex-y-end { align-self: flex-end; }
 
 .flex-fill { align-items: stretch; }
 
