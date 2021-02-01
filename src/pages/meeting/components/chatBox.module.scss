@@ -1,0 +1,12 @@
+@import "styles/app.scss";
+
+.panel-title {
+  @extend .flex-1;
+  @extend .text-center;
+  @extend .flex-row;
+  @extend .flex-x-start;
+  @extend .flex-y-center;
+  @extend .height-100p;
+  @extend .h4;
+  font-weight: 700;
+}

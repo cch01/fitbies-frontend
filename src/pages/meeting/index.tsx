@@ -10,8 +10,9 @@ import { useUserMedia } from 'hooks/useUserMedia';
 import LoadingScreen from 'components/loadingScreen';
 import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
-import Video from './components/Video';
-import ParticipantList from './components/ParticipantList';
+import Video from './components/video';
+import ParticipantList from './components/participantList';
+import Meeting from './components/meeting';
 
 const MeetingPage: React.FC = observer(() => {
   const history = useHistory();
@@ -22,7 +23,13 @@ const MeetingPage: React.FC = observer(() => {
   const { authStore, meetingStore, uiStore } = useStores();
   uiStore.setTitle(`Meeting with ${meetingStore.initiator?.nickname}`);
   const {
-    meetingId, roomId, isInitiator, currentMessages, currentParticipants,
+    meetingId,
+    roomId,
+    isInitiator,
+    currentMessages,
+    currentParticipants,
+    joinersStreams,
+    messages,
   } = meetingStore;
   useEffect(() => {
     (_.isNil(roomId || meetingId)) && history.push('/landing');
@@ -76,10 +83,7 @@ const MeetingPage: React.FC = observer(() => {
 
   return (
     <>
-      <Video stream={stream} />
-      <ParticipantList peerStreams={meetingStore.joinersStreams!} />
-      <button type="button" onClick={() => meetingStore.disconnectPeer('6003fe9c8c5bc400d1a13a07')}>Disconnect with cch02</button>
-      <button type="button" onClick={() => meetingStore.removeVideoStream('6003fe9c8c5bc400d1a13a07')}>remove stream of cch02</button>
+      <Meeting messages={messages} onSendMessage={(msg: string) => {}} localStream={stream} peerStreams={joinersStreams} />
     </>
   );
 });

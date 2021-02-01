@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from './ParticipantList.module.scss';
-import Participant from './Participant';
+import styles from './participantList.module.scss';
+import Participant from './participant';
 
 interface ParticipantListProps {
   peerStreams: {[x: string]: MediaStream};

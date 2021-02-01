@@ -10,7 +10,7 @@ const Layout:React.FC<{ children: React.ReactNode}> = observer(({ children }) =>
   const history = useHistory();
   const location = useLocation();
   if (!authStore.isLoggedIn) {
-    history.push({
+    history.replace({
       pathname: '/login',
       search: location.search === '/' ? '' : `?redirect=${encodeURIComponent(location.pathname + location.search)}`,
     });
