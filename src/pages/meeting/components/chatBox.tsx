@@ -27,16 +27,16 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
       content: 'you ar good boy', senderId: '12345', nickname: 'Leo', sentAt: new Date(), type: MessageType.TEAM_CHAT,
     },
     {
-      content: 'you ar good boy', senderId: '12345', nickname: 'Leo', sentAt: new Date(), type: MessageType.TEAM_CHAT,
+      content: 'you ar gohihisdfgsdfgvsdfvsrevservservedyfnryujmrt dyhntyuktdyhdrthytr hihisdfgsdfgvsdfvsr evservservedyfnryujmrtdyhntyuktdyhdrthytr  od boy', senderId: '12345', nickname: 'Leo', sentAt: new Date(), type: MessageType.TEAM_CHAT,
     },
     {
-      content: 'System hihi', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
+      content: 'System hihi hihisdfgsdfgvsdfvsrevservservedyfnryujmrtdyhntyuktdyhdrthytr hihisdfgsdfgvsdfvsrevservservedyfnryujmrtdyhntyuktdyhdrthytr aerg strh dfgj sergf stdh sdg sdrg serg serg rseg ', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
     },
     {
-      content: 'System hihisdfgsdfgvsdfvsrevservservsderfvsdfvsdrfvsdf', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
+      content: 'System hihisdfgsdfgvsdfvsrevservservedyfnryujmrtdyhntyuktdyhdrthytr herthertyhj erth erth erth erth dgfbdfhjg drtj dfth jfydgj dtyh ndfkjdrtyh rstdh drth rthgdtfrsderfvsdfvsdrfvsdf', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
     },
     {
-      content: 'hihisedrgvrdvsfdvsdvkjbersjkgbsjkredgvsr', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
+      content: 'hihisedrgvrdvsfdvsdvkjberrgdrthregetrgerthyrtdrhrtyjtyujyerthrtyukjrtyhdfygjmyrnrtyntuikmrtynsjkgbsjkredgvsr', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
     },
     {
       content: 'hihsdfvsdergbsrtghdsi', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
@@ -47,7 +47,7 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
   ];
   // TODO: some blur effect on top, chat bubbles
   return (
-    <div className="flex-column bg-grey-f border-radius px-2">
+    <div className="flex-column bg-grey-f border-radius px-2 width-100p">
       <div className="flex-1 flex-row">
         <div className={styles['panel-title']}>Group Chat</div>
         <div className="flex-2 flex-row flex-x-end">

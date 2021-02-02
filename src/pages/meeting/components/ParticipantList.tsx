@@ -1,21 +1,26 @@
 import React from 'react';
-import styles from './participantList.module.scss';
+import { useMediaQuery } from 'react-responsive';
 import Video from './video';
 
 interface ParticipantListProps {
   peerStreams: {[x: string]: MediaStream};
 }
 
-const ParticipantList: React.FC<ParticipantListProps> = ({ peerStreams }) => (
-  <div className={styles.participant}>
-    {Object.keys(peerStreams).map((userId) => {
-      if (!peerStreams[userId]) {
-        return null;
-      }
-      return <Video className="width-auto height-auto height-100p border-radius overflow-hidden m2" key={userId} stream={peerStreams[userId]} autoPlay muted={false} />;
-    })}
-  </div>
-);
+const ParticipantList: React.FC<ParticipantListProps> = ({ peerStreams }) => {
+  const isMobile = useMediaQuery({
+    query: '(max-width: 719px)',
+  });
+  return (
+    <div className="flex-row flex-1 flex-space-evenly">
+      {Object.keys(peerStreams).map((userId) => {
+        if (!peerStreams[userId]) {
+          return null;
+        }
+        return <div className="object-fit-fill overflow-hidden border-radius border-white m1"><Video className="border-radius overflow-hidden" key={userId} stream={peerStreams[userId]} autoPlay muted={false} /></div>;
+      })}
+    </div>
+  );
+};
 
 export default ParticipantList;
 

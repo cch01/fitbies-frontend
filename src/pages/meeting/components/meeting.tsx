@@ -19,8 +19,8 @@ const Meeting: React.FC<MeetingProps> = ({
   localStream, peerStreams, messages, onSendMessage,
 }) => (
   <div className="flex-row flex-space-evenly height-100p">
-    <div className="flex-column flex-5 px-2 flex-x-center flex-y-center">
-      <div className="flex-row width-100p flex-space-between px-1">
+    <div className="flex-column flex-3 px-2 flex-x-start flex-y-center">
+      <div className="flex-row width-100p flex-space-between">
         <div className="flex-row flex-space-between">
           <div className="square border-radius-sm bg-grey-f width-25 height-25">
             <i className="fas fa-chevron-left" />
@@ -34,16 +34,38 @@ const Meeting: React.FC<MeetingProps> = ({
           </div>
         </div>
       </div>
-
+      {/* TODO: put control btns at the bottom */}
       {localStream && (
-        <div className="width-100p mt-2 bg-contain flex-column flex-x-start overflow-hidden flex-space-evenly">
-          <Video className="min-width-100p min-height-100p width-auto height-auto border-radius overflow-hidden" stream={localStream} autoPlay muted />
-          <ParticipantStreams peerStreams={peerStreams} />
+        <div className="mt-2 flex-column flex-x-start overflow-hidden border-radius shadow p2 bg-black">
+          <div className="object-fit-fill">
+            <Video className="min-width-100p min-height-100p overflow-hidden border-radius overflow-hidden" stream={localStream} autoPlay muted />
+            <div className="position-absolute bottom height-100px mb-2 z2 flex-row width-100p flex-x-center">
+              <div className="circle width-40 height-40 overflow-hidden">
+                <div className="blur position-absolute width-100p height-100p bg-grey-7" />
+                <div className="white">
+                  <i className="fas fa-video-slash h4" />
+                </div>
+              </div>
+              <div className="square border-radius-l bg-grey-f width-55 height-55 white bg-red h3 opacity=75 mx-5">
+                <i className="fas fa-phone-slash" />
+              </div>
+              <div className="circle width-40 height-40 overflow-hidden">
+                <div className="blur position-absolute width-100p height-100p bg-grey-7" />
+                <div className="white">
+                  <i className="fas fa-microphone h4" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <ParticipantStreams peerStreams={{
+            sfsd: localStream, wefdw: localStream, wefwes: localStream, '43r34': localStream, ert34: localStream,
+          }}
+          />
         </div>
       )}
     </div>
-    <div className="flex-2 height-100p px-1">
-      <ChatBox className="height-100p px-1 flex-2" onSendMessage={onSendMessage} messages={messages} />
+    <div className="height-100p px-1">
+      <ChatBox onSendMessage={onSendMessage} messages={messages} />
     </div>
   </div>
 );

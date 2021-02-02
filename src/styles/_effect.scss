@@ -22,3 +22,12 @@
 .transition {
 	transition: all 0.3s;
 }
+
+.blur {
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+}
+
+.backdrop-filter {
+  backdrop-filter: blur(2px);
+}

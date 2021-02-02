@@ -2,8 +2,9 @@
 
 
 .chat-bubble {
-  width: 250px;
-  margin: 10px auto;
+  width: auto;
+  margin: 10px 20px;
+  max-width: 250px;
   @extend .border-radius-sm;
   background: #00bfb6;
   color: #fff;

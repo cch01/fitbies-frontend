@@ -51,9 +51,13 @@
 
 		.min-width-#{$i * 5}px {
 			min-width:$i * 5px;
-		}
+    }
+    
+    .min-width-#{$i * 5}p {
+      min-width:0% + $i * 5;
+    }
 }
-@for $i from 0 through 200 {
+@for $i from 0 through 500 {
 		.height-#{$i * 5}p {
 				height: 0% + $i * 5;
 		}
@@ -68,7 +72,19 @@
 		}
 		.max-height-#{$i * 5}vh {
 			max-height: $i * 5vh;
+    }
+    
+    .min-height-#{$i * 5}p {
+      min-height:0% + $i * 5;
+    }
+
+    .min-height-#{$i * 5}vh {
+			min-height:$i * 5vh;
 		}
+
+		.min-height-#{$i * 5}px {
+			min-height:$i * 5px;
+    }
 
 }
 

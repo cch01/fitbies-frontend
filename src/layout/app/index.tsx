@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useStores } from 'hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import { useHistory, useLocation } from 'react-router-dom';
-import styles from './index.module.scss';
+import '../mainLayout.scss';
 
 const Layout:React.FC<{ children: React.ReactNode}> = observer(({ children }) => {
   const { uiStore: { title }, authStore } = useStores();
@@ -23,8 +23,8 @@ const Layout:React.FC<{ children: React.ReactNode}> = observer(({ children }) =>
           { title ? `${title} - ZOOMED` : 'ZOOMED' }
         </title>
       </Helmet>
-      <div className={styles.background}>
-        <div className={styles.mainContainer}>
+      <div className="background">
+        <div className="mainContainer">
           {children}
         </div>
       </div>

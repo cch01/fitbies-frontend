@@ -7,6 +7,10 @@ $to: 8;
 .p-sm {padding: 2px;}
 .m-auto {margin: auto;}
 
+.object-fit-fill {
+  object-fit: fill;
+}
+
 @for $i from $from through $to {
     .p#{$i} { padding:  $padding * $i;  }
     .m#{$i} { margin:   $margin * $i;   }
