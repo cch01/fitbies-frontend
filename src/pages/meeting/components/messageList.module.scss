@@ -13,9 +13,11 @@
   @extend .text-middle;
   font-weight: 700;
   word-wrap: break-word;
+  white-space:pre-line;
 }
 
 .system-msg {
+  // @extend .height-auto;
   @extend .width-250;
   margin: 5px auto;
   @extend .border-radius-sm;
@@ -27,6 +29,7 @@
   @extend .text-middle;
   font-weight: 500;
   word-wrap: break-word;
+  white-space:pre-line;
 }
 
 .self-msg:before {

@@ -11,7 +11,7 @@ import ChatBox from './chatBox';
 interface MeetingProps {
   localStream?: MediaStream;
   peerStreams: {[x: string]: MediaStream};
-  onSendMessage: (msg: string) => void;
+  onSendMessage: (input: any) => void;
   messages: Message[];
 }
 
@@ -19,24 +19,25 @@ const Meeting: React.FC<MeetingProps> = ({
   localStream, peerStreams, messages, onSendMessage,
 }) => (
   <div className="flex-row flex-space-evenly height-100p">
-    <div className="flex-column flex-3 px-2 flex-x-start flex-y-center">
-      <div className="flex-row width-100p flex-space-between">
-        <div className="flex-row flex-space-between">
-          <div className="square border-radius-sm bg-grey-f width-25 height-25">
-            <i className="fas fa-chevron-left" />
+    <div className="">
+      <div className="flex-column  px-2 flex-x-start flex-y-center">
+        <div className="flex-row width-100p flex-space-between">
+          <div className="flex-row flex-space-between">
+            <div className="square border-radius-sm bg-grey-f width-25 height-25">
+              <i className="fas fa-chevron-left" />
+            </div>
+            <div className="pl-2 h3">{`Meeting initiated by ${'ADMIN'}`}</div>
           </div>
-          <div className="pl-2 h3">{`Meeting initiated by ${'ADMIN'}`}</div>
-        </div>
-        <div className="flex-row flex-space-around text-center">
-          <div className="light-green h4 flex-row text-center flex-y-end flex-x-center">
-            <i className="fas fa-plus-circle mr-1 m-auto" />
-            Invite user
+          <div className="flex-row flex-space-around text-center">
+            <div className="light-green h4 flex-row text-center flex-y-end flex-x-center">
+              <i className="fas fa-plus-circle mr-1 m-auto" />
+              Invite user
+            </div>
           </div>
         </div>
-      </div>
-      {/* TODO: put control btns at the bottom */}
-      {localStream && (
-        <div className="mt-2 flex-column flex-x-start overflow-hidden border-radius shadow p2 bg-black">
+        {/* TODO: put control btns at the bottom */}
+        {localStream && (
+        <div className="mt-2 flex-column flex-x-start width-100p overflow-hidden border-radius shadow p2 bg-black">
           <div className="object-fit-fill">
             <Video className="min-width-100p min-height-100p overflow-hidden border-radius overflow-hidden" stream={localStream} autoPlay muted />
             <div className="position-absolute bottom height-100px mb-2 z2 flex-row width-100p flex-x-center">
@@ -57,14 +58,12 @@ const Meeting: React.FC<MeetingProps> = ({
               </div>
             </div>
           </div>
-          <ParticipantStreams peerStreams={{
-            sfsd: localStream, wefdw: localStream, wefwes: localStream, '43r34': localStream, ert34: localStream,
-          }}
-          />
+          <ParticipantStreams peerStreams={peerStreams} />
         </div>
-      )}
+        )}
+      </div>
     </div>
-    <div className="height-100p px-1">
+    <div className="height-100p max-width-350">
       <ChatBox onSendMessage={onSendMessage} messages={messages} />
     </div>
   </div>

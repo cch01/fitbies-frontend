@@ -5,12 +5,13 @@ import React, {
 import { useHistory, useLocation } from 'react-router-dom';
 import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
-import { useSubscription } from '@apollo/client';
+import { useMutation, useSubscription } from '@apollo/client';
 import { useUserMedia } from 'hooks/useUserMedia';
 import LoadingScreen from 'components/loadingScreen';
 import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
 import Meeting from './components/meeting';
+import sendMeetingMessage from './graphql/sendMeetingMessage';
 
 const MeetingPage: React.FC = observer(() => {
   const history = useHistory();
@@ -75,13 +76,22 @@ const MeetingPage: React.FC = observer(() => {
     }
   }, [currentMessages]);
 
+  const [runSendMeetingMessageMutation] = useMutation(sendMeetingMessage);
+
+  const onSendMessage = (input: Record<string, string>):void => {
+    const { message } = input;
+    if (!message) return;
+    console.log({ userId, meetingId, content: message });
+    runSendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
+  };
+
   if (meetingLoading) {
     return <LoadingScreen />;
   }
 
   return (
     <>
-      <Meeting messages={messages} onSendMessage={(msg: string) => {}} localStream={stream} peerStreams={joinersStreams} />
+      <Meeting messages={messages} onSendMessage={onSendMessage} localStream={stream} peerStreams={joinersStreams} />
     </>
   );
 });
