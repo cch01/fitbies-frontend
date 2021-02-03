@@ -6,7 +6,17 @@
   @extend .flex-row;
   @extend .flex-x-start;
   @extend .flex-y-center;
-  @extend .height-100p;
   @extend .h4;
+  @extend .pr-4;
   font-weight: 700;
 }
+
+.chat-main-container {
+  @extend .flex-column;
+  @extend .bg-grey-f;
+  @extend .border-radius;
+  @extend .border;
+  @extend .px-2;
+  // @extend .width-100p;
+}
+

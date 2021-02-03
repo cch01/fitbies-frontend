@@ -1,18 +1,18 @@
 @import "styles/app.scss";
 
 .video-container {
-  @extend width-100p;
-  @extend height-100p;
-  @extend mt-2;
-  @extend bg-contain;
-  @extend flex-column;
-  @extend flex-x-start;
-  @extend overflow-hidden;
+  @extend .width-100p;
+  @extend .height-100p;
+  @extend .mt-2;
+  @extend .bg-contain;
+  @extend .flex-column;
+  @extend .flex-x-start;
+  @extend .overflow-hidden;
 }
 
 .main-video {
-  @extend width-100p;
-  @extend border-radius;
-  @extend overflow-hidden;
-  @extend m1;
+  @extend .width-100p;
+  @extend .border-radius;
+  @extend .overflow-hidden;
+  @extend .m1;
 } 
