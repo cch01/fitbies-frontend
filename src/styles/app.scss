@@ -165,6 +165,19 @@
     }
   }
 
+  ::-webkit-scrollbar {
+    width: 4px;
+    margin: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2)
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: initial;
+  }
+
   select {
    -webkit-appearance: none;
    -moz-appearance: none;

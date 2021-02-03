@@ -19,7 +19,7 @@ const Meeting: React.FC<MeetingProps> = ({
   localStream, peerStreams, messages, onSendMessage,
 }) => (
   <div className="flex-row flex-space-evenly height-100p">
-    <div className="flex-column flex-3 px-2 flex-x-start flex-y-center">
+    <div className="flex-column flex-7 px-2 flex-x-start flex-y-center">
       <div className="flex-row width-100p flex-space-between">
         <div className="flex-row flex-space-between">
           <div className="square border-radius-sm bg-grey-f width-25 height-25">
@@ -64,9 +64,7 @@ const Meeting: React.FC<MeetingProps> = ({
         </div>
       )}
     </div>
-    <div className="height-100p px-1">
-      <ChatBox onSendMessage={onSendMessage} messages={messages} />
-    </div>
+    <ChatBox onSendMessage={onSendMessage} messages={messages} />
   </div>
 );
 
