@@ -28,6 +28,7 @@ export interface Message {
 interface MeetingInput {
   _id: string;
   roomId: string;
+  passCode?: string;
   initiator: User;
   participants: User[];
 }
@@ -59,6 +60,8 @@ class MeetingStore {
 
   @observable meetingId?: string;
 
+  @observable meetingPassCode?: string;
+
   @observable userId?: string;
 
   @observable roomId?: string;
@@ -86,6 +89,7 @@ class MeetingStore {
   @action reset():void {
     console.log('reset meeting store');
     this.meetingId = undefined;
+    this.meetingPassCode = undefined;
     this.userId = undefined;
     this.roomId = undefined;
     this.initiator = undefined;
@@ -98,6 +102,7 @@ class MeetingStore {
 
   @action setMeeting(meetingInput: MeetingInput, userId: string):void {
     this.meetingId = meetingInput._id;
+    this.meetingPassCode = meetingInput.passCode;
     this.roomId = meetingInput.roomId;
     this.initiator = meetingInput.initiator;
     this.participants = meetingInput.participants;

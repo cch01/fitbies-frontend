@@ -1,8 +1,6 @@
-import React, { lazy, Suspense, useEffect } from 'react';
-import Peer from 'peerjs';
+import React, { lazy, useEffect } from 'react';
 import {
-  BrowserRouter as Router, Route, Switch,
-  useLocation, useHistory, Redirect,
+  Route, Switch, useLocation, useHistory,
 } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,8 +8,6 @@ import { ToastContainer } from 'react-toastify';
 import { useInitApollo } from 'hooks/useInitApollo';
 import { observer } from 'mobx-react';
 import { useStores } from 'hooks/useStores';
-import LoadingScreen from 'components/loadingScreen';
-import AuthLayout from 'layout/authLayout';
 import { HelmetProvider } from 'react-helmet-async';
 import { StringParam, useQueryParam } from 'use-query-params';
 import MainRouter from 'pages/MainRouter';

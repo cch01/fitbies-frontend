@@ -12,10 +12,13 @@ import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
 import Meeting from './components/meeting';
 import sendMeetingMessage from './graphql/sendMeetingMessage';
+import leaveMeeting from './graphql/leaveMeeting';
 
-const MeetingPage: React.FC = observer(() => {
+const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
-
+  const [stopSubscription, setStopSubscription] = useState<boolean>(false);
+  const [isMicOn, setIsMicOn] = useState<boolean>(true);
+  const [isCamOn, setIsCamOn] = useState<boolean>(true);
   const count = useRef<number>(1);
   // eslint-disable-next-line no-plusplus
   console.warn('rerender meeting page', count.current++);
@@ -23,12 +26,14 @@ const MeetingPage: React.FC = observer(() => {
   uiStore.setTitle(`Meeting with ${meetingStore.initiator?.nickname}`);
   const {
     meetingId,
+    meetingPassCode,
     roomId,
     isInitiator,
     currentMessages,
     currentParticipants,
     joinersStreams,
     messages,
+    initiator,
   } = meetingStore;
   useEffect(() => {
     (_.isNil(roomId || meetingId)) && history.push('/landing');
@@ -36,9 +41,15 @@ const MeetingPage: React.FC = observer(() => {
   const userId = authStore.viewer._id!;
   const {
     data: meetingChannelData, error: meetingChannelError,
-  } = useSubscription(meetingChannel, { variables: { userId, meetingId } });
+  } = useSubscription(meetingChannel, { variables: { userId, meetingId }, skip: stopSubscription });
 
-  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
+  const [runSendMeetingMessageMutation] = useMutation(sendMeetingMessage);
+
+  const [runLeaveMeetingMutation] = useMutation(leaveMeeting);
+
+  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({
+    video: isCamOn, audio: isMicOn, width: 640, height: 360,
+  });
 
   userMediaError && console.log('err', userMediaError);
   console.log('meetingId', meetingStore.meetingId);
@@ -67,6 +78,7 @@ const MeetingPage: React.FC = observer(() => {
       console.log('channel event come!');
       meetingStore.eventDispatcher(meetingChannelData.meetingChannel);
     }
+    return setStopSubscription(true);
   }, [meetingChannelData]);
 
   useEffect(() => {
@@ -76,24 +88,46 @@ const MeetingPage: React.FC = observer(() => {
     }
   }, [currentMessages]);
 
-  const [runSendMeetingMessageMutation] = useMutation(sendMeetingMessage);
+  const onToggleMic = () => { setIsMicOn((val) => !val); };
+  const onToggleCam = () => { setIsCamOn((val) => !val); };
 
-  const onSendMessage = (input: Record<string, string>):void => {
+  const onSendMessage = (input: Record<string, string>): void => {
     const { message } = input;
     if (!message) return;
     console.log({ userId, meetingId, content: message });
     runSendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
   };
 
-  if (meetingLoading) {
+  const onLeaveMeeting = (): void => {
+    console.log('Leave meeting pressed');
+    runLeaveMeetingMutation({ variables: { userId, meetingId } });
+    meetingStore.reset();
+    history.replace('/landing');
+  };
+
+  if (meetingLoading || streamLoading) {
     return <LoadingScreen />;
   }
 
   return (
     <>
-      <Meeting messages={messages} onSendMessage={onSendMessage} localStream={stream} peerStreams={joinersStreams} />
+      <Meeting
+        isInitiator={isInitiator}
+        meetingId={meetingId!}
+        meetingPassCode={meetingPassCode}
+        initiatorName={initiator!.nickname}
+        messages={messages}
+        localStream={stream}
+        peerStreams={joinersStreams}
+        onLeaveMeeting={onLeaveMeeting}
+        onSendMessage={onSendMessage}
+        onToggleMic={onToggleMic}
+        onToggleCam={onToggleCam}
+        isMicOn={isMicOn}
+        isCamOn={isCamOn}
+      />
     </>
   );
-});
+}));
 
 export default MeetingPage;

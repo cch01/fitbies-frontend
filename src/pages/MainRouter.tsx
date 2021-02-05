@@ -6,6 +6,7 @@ import {
 import { useStores } from 'hooks/useStores';
 import { observer } from 'mobx-react';
 import LoadingScreen from 'components/loadingScreen';
+import MeetingLayout from 'layout/meetingLayout';
 
 const Meeting: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/meeting'));
 const JoinMeetingPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/joinMeeting'));
@@ -22,16 +23,24 @@ const MainRouter: React.FC = observer(() => {
     }
   }, [authStore.isLoggedIn]);
   return (
-    <Layout>
-      <Suspense fallback={<LoadingScreen />}>
-        <Switch>
-          <Route path="/meeting" component={Meeting} />
-          <Route path="/host" component={CreateMeetingPage} />
-          <Route path="/join" component={JoinMeetingPage} />
-          <Route component={NotFound} />
-        </Switch>
-      </Suspense>
-    </Layout>
+    <Switch>
+      <Route path="/meeting">
+        <MeetingLayout>
+          <Suspense fallback={<LoadingScreen width="850px" />}>
+            <Meeting />
+          </Suspense>
+        </MeetingLayout>
+      </Route>
+      <Layout>
+        <Suspense fallback={<LoadingScreen />}>
+          <Switch>
+            <Route path="/host" component={CreateMeetingPage} />
+            <Route path="/join" component={JoinMeetingPage} />
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
+      </Layout>
+    </Switch>
   );
 });
 

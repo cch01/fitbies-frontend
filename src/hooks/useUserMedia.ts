@@ -7,18 +7,22 @@ interface Constraints {
   width?: number;
   height?: number;
   audio?: boolean;
+  video?: boolean;
 }
 
 export const useUserMedia = (
-  { audio = true, width = 768, height = 1024 }:Constraints,
+  {
+    audio = true, width = 640, height = 360, video = true,
+  }:Constraints,
 ) => {
   let error: Error;
   const streamRef = useRef<MediaStream>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    (audio || video) && setLoading(true);
     navigator.mediaDevices.getUserMedia({
-      video: { width, height }, audio: false,
+      video: video && { width, height }, audio,
     })
       .then((camStream) => {
         if (camStream) {
@@ -27,6 +31,6 @@ export const useUserMedia = (
         }
       }).catch((err) => { error = err; });
     return streamRef.current?.getTracks().forEach((track) => track.stop());
-  }, []);
+  }, [width, height, audio, video]);
   return useMemo(() => ({ error, stream: streamRef.current, loading }), [loading]);
 };

@@ -40,8 +40,10 @@
 
 .flex { flex: 1; }
 
-@for $i from 1 through 12 {
+@for $i from 0 through 12 {
     .flex-#{$i} { flex: $i; } // flex: 1; to flex: 12;
+    .flex-grow-#{$i} { flex-grow: $i; }
+    .flex-shrink-#{$i} { flex-shrink: $i; }
 }
 
 @for $i from 1 through 10 {
