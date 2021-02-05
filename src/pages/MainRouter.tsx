@@ -26,7 +26,7 @@ const MainRouter: React.FC = observer(() => {
     <Switch>
       <Route path="/meeting">
         <MeetingLayout>
-          <Suspense fallback={<LoadingScreen />}>
+          <Suspense fallback={<LoadingScreen width="850px" />}>
             <Meeting />
           </Suspense>
         </MeetingLayout>
@@ -39,10 +39,8 @@ const MainRouter: React.FC = observer(() => {
             <Route component={NotFound} />
           </Switch>
         </Suspense>
-
       </Layout>
     </Switch>
-
   );
 });
 
