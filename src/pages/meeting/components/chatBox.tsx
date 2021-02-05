@@ -55,7 +55,7 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
   return (
   // styles['chat-main-container']
     <div className="flex-column bg-grey-f border-radius px-2 height-100p">
-      <div className="height-60 flex-1 z2">
+      <div className="height-60 z2" style={{ flexGrow: 0 }}>
         <div className="flex-row my-2">
           <div className={styles['panel-title']}>Group Chat</div>
           <div className="flex-2 flex-row flex-x-end">
@@ -64,9 +64,11 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
           </div>
         </div>
       </div>
-      <div className="overflow-scroll position-absolute height-100p width-100p"><MessageList messages={messages} /></div>
-      <div className="flex-1 border-radius height-60 mb-2 z2">
-        <form onSubmit={handleSubmit} className="width-100p border-radius flex-row flex-x-center flex-y-center bg-white shadow overflow-hidden">
+      <div className="overflow-scroll width-100p height-100p" style={{ flexGrow: 0 }}>
+        <MessageList messages={messages} />
+      </div>
+      <div className="border-radius height-60 mb-2 z2" style={{ flexGrow: 0 }}>
+        <form onSubmit={handleSubmit} className="height-60 width-100p border-radius flex-row flex-x-center flex-y-center bg-white shadow overflow-hidden">
           <div className="width-80p flex-x-center flex-y-center overflow-scroll">
             <SingleLineFormField
               form={form}

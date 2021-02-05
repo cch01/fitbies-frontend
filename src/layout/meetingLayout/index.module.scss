@@ -5,16 +5,18 @@
   -ms-overflow-style: none;
   height: 100vh;
   background-color: #abe6e3;
-  padding: 20px;
+  @include desktop{
+    padding: 45px 20px;
+  }
   @extend .flex-column;
   @extend .flex-x-center;
   @extend .flex-y-center;
   @extend .overflow-scroll;
 }
 
-.mainContainer{
-  min-height:400px;
-  min-width: 600px;
+.meetingContainer{
+  min-height:100%;
+  min-width: 1025px;
   background-color: $white;
   @extend .border-radius;
   @extend .shadow;
