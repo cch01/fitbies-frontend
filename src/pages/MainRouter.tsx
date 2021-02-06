@@ -21,7 +21,7 @@ const MainRouter: React.FC = observer(() => {
     if (location.pathname === '/') {
       history.push('/landing');
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.isRegistered]);
   return (
     <Switch>
       <Route path="/meeting">

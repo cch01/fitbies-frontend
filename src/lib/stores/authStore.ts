@@ -29,7 +29,7 @@ class AuthStore {
   @action
   setToken = (newToken: string) => {
     localStorage.setItem('access-token', newToken);
-    this.token = localStorage.getItem('access-token');
+    this.token = newToken;
   }
 
   @action
@@ -44,7 +44,7 @@ class AuthStore {
   }
 
   @computed
-  get isLoggedIn(): boolean {
+  get isRegistered(): boolean {
     return !!this.viewer._id;
   }
 }

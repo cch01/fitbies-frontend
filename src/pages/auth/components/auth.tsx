@@ -18,15 +18,19 @@ export interface SignInInput {
   password: string;
 }
 
-export interface JoinMeetingInput {
-  joinerId: string;
-  meetingId: string;
+export interface SignUpInput {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nickname: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface LoginPageProps {
   onSignIn(input: SignInInput): any;
-  onJoinMeeting(input: JoinMeetingInput): any;
-  other(): any
+  onAnonymousSignUp(input: {nickname: string}): any;
+  onSignUp(input: SignUpInput): any;
 }
 const Copyright: React.FC = () => (
   <Typography variant="body2" color="textSecondary" align="center">
@@ -34,7 +38,6 @@ const Copyright: React.FC = () => (
     <Link color="inherit" href="https://material-ui.com/">
       Your Website
     </Link>
-    {' '}
     {new Date().getFullYear()}
     .
   </Typography>
@@ -47,11 +50,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Auth:React.FC<LoginPageProps> = ({ other, onSignIn, onJoinMeeting }) => {
+// TODO: split forms to components
+const Auth:React.FC<LoginPageProps> = ({ onSignIn, onAnonymousSignUp, onSignUp }) => {
   const classes = useStyles();
-  const [isJoining, setIsJoining] = useState<boolean>(false);
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
+  const [isFullSignUp, setIsFullSignUp] = useState<boolean>(false);
   const { form: signInForm, handleSubmit: handleSignInSubmit, submitting: signInSubmitting } = useForm({ onSubmit: onSignIn });
-  const { form: joinMeetingForm, handleSubmit: handleJoinMeetingSubmit, submitting: joinMeetingSubmitting } = useForm({ onSubmit: onJoinMeeting });
+  const { form: anonymousSignUpForm, handleSubmit: handleAnonymousSignUpSubmit, submitting: anonymousSignUpSubmitting } = useForm({ onSubmit: onAnonymousSignUp });
+  const { form: signUpForm, handleSubmit: handleSignUpSubmit, submitting: signUpSubmitting } = useForm({ onSubmit: onSignUp });
   return (
     <Container component="main" maxWidth="xs">
       <div className="flex-column flex-y-center mt-8">
@@ -61,7 +67,7 @@ const Auth:React.FC<LoginPageProps> = ({ other, onSignIn, onJoinMeeting }) => {
         <div className="h1 mb-1">
           Welcome to ZOOMED
         </div>
-        <form className={clsx({ hide: isJoining })} noValidate onSubmit={handleSignInSubmit}>
+        <form className={clsx({ hide: isSignUp })} noValidate onSubmit={handleSignInSubmit}>
           <SingleLineFormField
             form={signInForm}
             variant="outlined"
@@ -93,48 +99,137 @@ const Auth:React.FC<LoginPageProps> = ({ other, onSignIn, onJoinMeeting }) => {
           >
             Sign In
           </Button>
-        </form>
-        <form className={clsx({ hide: !isJoining })} noValidate onSubmit={handleJoinMeetingSubmit}>
-          <SingleLineFormField
-            form={joinMeetingForm}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Room ID"
-            name="roomId"
-            autoFocus
-          />
-          <SingleLineFormField
-            form={joinMeetingForm}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="passCode"
-            label="Pass Code (if any)"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            style={{ marginTop: 20, marginBottom: 20 }}
-          >
-            Join meeting
-          </Button>
-        </form>
-        <Grid container className="hoverShadow transition">
-          <Grid item xs>
-            <Link href="#" variant="body2" onClick={other}>
-              Forgot password?
-            </Link>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="#" variant="body2" onClick={() => setIsSignUp((val) => !val)}>
+                Register
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Link href="#" variant="body2" onClick={() => setIsJoining((val) => !val)}>
-              Join a meeting
-            </Link>
-          </Grid>
-        </Grid>
+        </form>
+        <div className={clsx({ hide: !isSignUp }, 'flex-column flex-y-center')}>
+          <form noValidate onSubmit={handleAnonymousSignUpSubmit} className={clsx('fullwidth', { hide: isFullSignUp })}>
+            <SingleLineFormField
+              form={anonymousSignUpForm}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Nickname"
+              name="nickName"
+              autoFocus
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 20, marginBottom: 20 }}
+            >
+              Join meeting
+            </Button>
+          </form>
+          <form className={clsx({ hide: !isFullSignUp })} onSubmit={handleSignUpSubmit}>
+            <SingleLineFormField
+              form={signUpForm}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="First Name"
+              name="firstName"
+              autoFocus
+            />
+            <SingleLineFormField
+              form={signUpForm}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              name="lastName"
+              label="Last Name"
+            />
+            <SingleLineFormField
+              form={signUpForm}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              name="email"
+              label="Email"
+            />
+            <SingleLineFormField
+              form={signUpForm}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              name="nickname"
+              label="Nickname"
+            />
+            <SingleLineFormField
+              form={signUpForm}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              name="password"
+              label="Password"
+            />
+            <SingleLineFormField
+              form={signUpForm}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              name="confirmPassword"
+              label="Confirm Password"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 20, marginBottom: 20 }}
+            >
+              Join meeting
+            </Button>
+          </form>
+          <div className={clsx({ hide: !isSignUp }, 'fullwidth ')}>
+            <Grid container justify="space-between">
+              <Grid item>
+                <Link variant="body2" onClick={() => setIsFullSignUp((val) => !val)}>
+                  {isFullSignUp ? 'Join meeting without registration' : 'Register as full member'}
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link variant="body2" onClick={() => setIsSignUp((val) => !val)}>
+                  Back to login
+                </Link>
+              </Grid>
+            </Grid>
+          </div>
+          <div className={clsx({ hide: isSignUp }, 'fullwidth')}>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2" onClick={() => setIsSignUp((val) => !val)}>
+                  Register
+                </Link>
+              </Grid>
+            </Grid>
+          </div>
+        </div>
+
       </div>
       <Box mt={8}>
         <Copyright />

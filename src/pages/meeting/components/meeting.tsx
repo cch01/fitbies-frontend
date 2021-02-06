@@ -8,8 +8,9 @@ import { toJS } from 'mobx';
 import ParticipantStreams from './participantStreams';
 import Video from './video';
 import styles from './meeting.module.scss';
-import ChatBox from './chatBox';
+import InfoPanel from './infoPanel';
 
+// TODO: change all dependent components to using HIDE
 interface MeetingProps {
   localStream?: MediaStream;
   peerStreams: {[x: string]: MediaStream};
@@ -42,13 +43,13 @@ const Meeting: React.FC<MeetingProps> = ({
   isInitiator,
 }) => (
   <div className="flex-row flex-space-evenly height-100p flex-y-start">
-    <div className="flex-column px-2 flex-70p flex-x-start flex-y-center">
+    <div className="flex-column pr-2 flex-70p flex-x-start flex-y-center">
       <div className="flex-row width-100p flex-space-between">
         <div className="flex-row flex-space-between">
-          <div className="square border-radius-sm bg-grey-f width-25 height-25">
+          {/* <div className="square border-radius-sm bg-grey-f width-25 height-25">
             <i className="fas fa-chevron-left" />
-          </div>
-          <div className="pl-2 h3">{`Meeting initiated by ${initiatorName}`}</div>
+          </div> */}
+          <div className="h3">{`Meeting initiated by ${initiatorName}`}</div>
         </div>
         {isInitiator && (
         <div className="flex-row flex-space-around text-center">
@@ -64,9 +65,7 @@ const Meeting: React.FC<MeetingProps> = ({
         {localStream && <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted={false} />}
         {!_.isEmpty(peerStreams) && (
         <div className="flex-row flex-0 flex-space-around mt-1 max-height-25p">
-          {console.log(toJS(peerStreams))}
           {Object.keys(peerStreams).map((participantId) => {
-            console.log('streams length', Object.keys(peerStreams).length);
             if (!peerStreams[participantId]) {
               return null;
             }
@@ -109,7 +108,7 @@ const Meeting: React.FC<MeetingProps> = ({
       </div>
     </div>
     <div className="height-100p max-width-350">
-      <ChatBox onSendMessage={onSendMessage} messages={messages} />
+      <InfoPanel onSendMessage={onSendMessage} messages={messages} />
     </div>
   </div>
 );

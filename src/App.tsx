@@ -36,10 +36,10 @@ const App: React.FC = observer(() => {
   }, [client]);
 
   useEffect(() => {
-    if (authStore.isLoggedIn) {
+    if (authStore.isRegistered) {
       history.push(redirect ?? '/landing');
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.isRegistered]);
 
   return (
     <ApolloProvider client={client}>
