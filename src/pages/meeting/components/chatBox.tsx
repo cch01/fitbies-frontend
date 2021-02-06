@@ -1,6 +1,6 @@
 import SingleLineFormField from 'components/forms/SingleLineFormField';
 import { Message, MessageType } from 'lib/stores/meetingStore';
-import React, { useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { useForm } from 'react-final-form-hooks';
 import styles from './chatBox.module.scss';
 import MessageList from './messageList';
@@ -18,44 +18,29 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
       form.change('message' as never, undefined);
     },
   });
+  const chatContainer = createRef<HTMLDivElement >();
+  const checkInputAndSubmit = (e:React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      handleSubmit();
+      e.preventDefault();
+    }
+  };
 
-  const msgs:Message[] = [
-    {
-      content: 'hihi', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
-    },
-    {
-      content: 'you ar good boy', senderId: '12345', nickname: 'Leo', sentAt: new Date(), type: MessageType.TEAM_CHAT,
-    },
-    {
-      content: 'System hihi', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
-    },
-    {
-      content: 'you ar good boy', senderId: '12345', nickname: 'Leo', sentAt: new Date(), type: MessageType.TEAM_CHAT,
-    },
-    {
-      content: 'you ar  dyhntyuktdyhdrthytr hihisdfgsdfgvsdfvsr evservservedyfnryujmrtdyhntyuktdyhdrthytr  od boy', senderId: '12345', nickname: 'Leo', sentAt: new Date(), type: MessageType.TEAM_CHAT,
-    },
-    {
-      content: 'dfgj sergf stdh sdg sdrg serg serg rseg ', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
-    },
-    {
-      content: 'System  herthertyhj erth erth erth erth dgfbdfhjg drtj dfth jfydgj dtyh ndfkjdrtyh rstdh drth rthgdtfrsderfvsdfvsdrfvsdf', senderId: '1231234', sentAt: new Date(), type: MessageType.SYSTEM,
-    },
-    {
-      content: 'sdvcs sedf sdf sdf sd', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
-    },
-    {
-      content: 'hihsdfvsdergbsrtghdsi', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
-    },
-    {
-      content: 'hihi', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
-    },
-  ];
+  const scrollToMyRef = () => {
+    console.log('scroll!');
+    const scroll = chatContainer.current!.scrollHeight
+      - chatContainer.current!.clientHeight;
+    console.log('to', scroll);
+    chatContainer.current!.scrollTo(0, scroll);
+  };
+
+  useEffect(() => { scrollToMyRef(); }, [messages.length]);
+
   // TODO: some blur effect on top, chat bubbles
   return (
   // styles['chat-main-container']
     <div className="flex-column bg-grey-f border-radius px-2 height-100p">
-      <div className="height-60 z2" style={{ flexGrow: 0 }}>
+      <div className="height-60 z2">
         <div className="flex-row my-2">
           <div className={styles['panel-title']}>Group Chat</div>
           <div className="flex-2 flex-row flex-x-end">
@@ -64,10 +49,10 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
           </div>
         </div>
       </div>
-      <div className="overflow-scroll width-100p height-100p" style={{ flexGrow: 0 }}>
+      <div className="overflow-scroll width-100p height-100p transition" ref={chatContainer}>
         <MessageList messages={messages} />
       </div>
-      <div className="border-radius height-60 mb-2 z2" style={{ flexGrow: 0 }}>
+      <div className="border-radius height-60 mb-2 z2">
         <form onSubmit={handleSubmit} className="height-60 width-100p border-radius flex-row flex-x-center flex-y-center bg-white shadow overflow-hidden">
           <div className="width-80p flex-x-center flex-y-center overflow-scroll">
             <SingleLineFormField
@@ -86,6 +71,7 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
                 },
                 disableUnderline: true,
               }}
+              onKeyPress={checkInputAndSubmit}
             />
           </div>
           <button type="submit" className="ml-2 border-radius-sm square h5 bg-light-green border-light-green pale-green height-35 width-35">

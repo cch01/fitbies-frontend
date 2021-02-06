@@ -1,8 +1,6 @@
 import { useStores } from 'hooks/useStores';
-import React, {
-  createRef, RefObject, useEffect, useRef, useState,
-} from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
 import { useMutation, useSubscription } from '@apollo/client';
@@ -12,7 +10,6 @@ import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
 import Meeting from './components/meeting';
 import sendMeetingMessage from './graphql/sendMeetingMessage';
-import leaveMeeting from './graphql/leaveMeeting';
 
 const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
@@ -29,6 +26,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     meetingPassCode,
     roomId,
     isInitiator,
+    isJoining,
     currentMessages,
     currentParticipants,
     joinersStreams,
@@ -45,11 +43,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
 
   const [runSendMeetingMessageMutation] = useMutation(sendMeetingMessage);
 
-  const [runLeaveMeetingMutation] = useMutation(leaveMeeting);
-
-  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({
-    video: isCamOn, audio: isMicOn, width: 640, height: 360,
-  });
+  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
 
   userMediaError && console.log('err', userMediaError);
   console.log('meetingId', meetingStore.meetingId);
@@ -65,9 +59,11 @@ const MeetingPage: React.FC = React.memo(observer(() => {
 
   useEffect(() => {
     console.log('peer changed!!!');
-    if (!isInitiator && meetingStore.peer && stream) {
+    if (isJoining && meetingStore.peer && stream) {
       console.log('fire connection');
-      meetingStore.connectToPeer(roomId!, stream);
+      if (!isInitiator) {
+        meetingStore.connectToPeer(roomId!, stream);
+      }
       meetingStore.getJoinerIds(userId)
         .forEach((id) => meetingStore.connectToPeer(id, stream));
     }
@@ -75,18 +71,22 @@ const MeetingPage: React.FC = React.memo(observer(() => {
 
   useEffect(() => {
     if (meetingChannelData?.meetingChannel) {
-      console.log('channel event come!');
       meetingStore.eventDispatcher(meetingChannelData.meetingChannel);
     }
-    return setStopSubscription(true);
   }, [meetingChannelData]);
 
   useEffect(() => {
-    if (!_.isEmpty(currentMessages)) {
-      console.log('new message!');
-      console.log(currentMessages);
+    if (!stream) {
+      return;
     }
-  }, [currentMessages]);
+    stream.getVideoTracks().forEach((track) => {
+      track.enabled = isCamOn;
+    });
+
+    stream.getAudioTracks().forEach((track) => {
+      track.enabled = isMicOn;
+    });
+  }, [stream, isCamOn, isMicOn]);
 
   const onToggleMic = () => { setIsMicOn((val) => !val); };
   const onToggleCam = () => { setIsCamOn((val) => !val); };
@@ -94,13 +94,11 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   const onSendMessage = (input: Record<string, string>): void => {
     const { message } = input;
     if (!message) return;
-    console.log({ userId, meetingId, content: message });
     runSendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
   };
 
   const onLeaveMeeting = (): void => {
-    console.log('Leave meeting pressed');
-    runLeaveMeetingMutation({ variables: { userId, meetingId } });
+    meetingStore.disconnectServer();
     meetingStore.reset();
     history.replace('/landing');
   };
@@ -115,7 +113,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
         isInitiator={isInitiator}
         meetingId={meetingId!}
         meetingPassCode={meetingPassCode}
-        initiatorName={initiator!.nickname}
+        initiatorName={initiator?.nickname}
         messages={messages}
         localStream={stream}
         peerStreams={joinersStreams}

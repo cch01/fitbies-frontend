@@ -45,7 +45,7 @@ const SelfMessage: React.FC<{message: Message, iconColor: string}> = ({ message,
 
 const TeamMessage: React.FC<{message: Message, iconColor: string}> = ({ message, iconColor }) => (
   <div className="flex-row height-auto">
-    <div className="flex-column" style={{ marginTop: 60 }}>
+    <div className="flex-column flex-x-center">
       <div className="circle width-30 height-30 self-flex-y-end" style={{ backgroundColor: iconColor }}>
         <div className="h2" style={{ fontWeight: 700 }}>{message.nickname!.charAt(0).toUpperCase()}</div>
       </div>

@@ -57,7 +57,7 @@ export const useMeeting = ({
       addCallObject(connectorId, call);
     });
     return () => { peer?.disconnect(); peer?.destroy(); };
-  }, [localMediaStream?.id]);
+  }, [localMediaStream]);
 
   return {
     loading,

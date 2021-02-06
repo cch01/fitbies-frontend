@@ -4,12 +4,12 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useForm } from 'react-final-form-hooks';
 
-export interface CreateMeetingInput {
+export interface HostMeetingInput {
   passCode?: string;
 }
 
-const CreateMeeting: React.FC<{onCreateMeeting: (input: CreateMeetingInput) => void}> = observer(({ onCreateMeeting }) => {
-  const { form, handleSubmit, submitting } = useForm({ onSubmit: onCreateMeeting });
+const HostMeeting: React.FC<{onHostMeeting: (input: HostMeetingInput) => void}> = observer(({ onHostMeeting }) => {
+  const { form, handleSubmit, submitting } = useForm({ onSubmit: onHostMeeting });
   return (
     <div className="flex-column flex-x-center flex-y-center ">
       <div className="h1 text-center max-width-100p py-5">
@@ -38,4 +38,4 @@ const CreateMeeting: React.FC<{onCreateMeeting: (input: CreateMeetingInput) => v
   );
 });
 
-export default CreateMeeting;
+export default HostMeeting;
