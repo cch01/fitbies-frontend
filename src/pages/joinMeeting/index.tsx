@@ -20,9 +20,8 @@ const JoinMeetingPage: React.FC = observer(() => {
 
   const onJoinMeeting = ({ meetingId, passCode }: JoinRoomInput) => {
     runJoinMeetingMutation({ variables: { joinMeetingInput: { meetingId, passCode, joinerId: viewer._id } } }).then(({ data }) => {
-      console.log('join response', data);
       if (!_.isEmpty(data.joinMeeting.roomId)) {
-        meetingStore.setMeeting(data.joinMeeting, viewer._id!);
+        meetingStore.setMeeting(data.joinMeeting, viewer._id!, true);
         history.push('/meeting');
       }
     });

@@ -26,6 +26,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     meetingPassCode,
     roomId,
     isInitiator,
+    isJoining,
     currentMessages,
     currentParticipants,
     joinersStreams,
@@ -58,9 +59,11 @@ const MeetingPage: React.FC = React.memo(observer(() => {
 
   useEffect(() => {
     console.log('peer changed!!!');
-    if (!isInitiator && meetingStore.peer && stream) {
+    if (isJoining && meetingStore.peer && stream) {
       console.log('fire connection');
-      meetingStore.connectToPeer(roomId!, stream);
+      if (!isInitiator) {
+        meetingStore.connectToPeer(roomId!, stream);
+      }
       meetingStore.getJoinerIds(userId)
         .forEach((id) => meetingStore.connectToPeer(id, stream));
     }
@@ -68,7 +71,6 @@ const MeetingPage: React.FC = React.memo(observer(() => {
 
   useEffect(() => {
     if (meetingChannelData?.meetingChannel) {
-      console.log('channel event come!');
       meetingStore.eventDispatcher(meetingChannelData.meetingChannel);
     }
   }, [meetingChannelData]);
@@ -92,13 +94,12 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   const onSendMessage = (input: Record<string, string>): void => {
     const { message } = input;
     if (!message) return;
-    console.log({ userId, meetingId, content: message });
     runSendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
   };
 
   const onLeaveMeeting = (): void => {
-    meetingStore.reset();
     meetingStore.disconnectServer();
+    meetingStore.reset();
     history.replace('/landing');
   };
 
@@ -112,7 +113,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
         isInitiator={isInitiator}
         meetingId={meetingId!}
         meetingPassCode={meetingPassCode}
-        initiatorName={initiator!.nickname}
+        initiatorName={initiator?.nickname}
         messages={messages}
         localStream={stream}
         peerStreams={joinersStreams}

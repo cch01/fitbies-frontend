@@ -10,7 +10,7 @@ import MeetingLayout from 'layout/meetingLayout';
 
 const Meeting: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/meeting'));
 const JoinMeetingPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/joinMeeting'));
-const CreateMeetingPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/createMeeting'));
+const HostMeetingPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/hostMeeting'));
 const NotFound: React.FC = () => (<div>404 NOT FOUND.</div>);
 
 const MainRouter: React.FC = observer(() => {
@@ -34,7 +34,7 @@ const MainRouter: React.FC = observer(() => {
       <Layout>
         <Suspense fallback={<LoadingScreen />}>
           <Switch>
-            <Route path="/host" component={CreateMeetingPage} />
+            <Route path="/host" component={HostMeetingPage} />
             <Route path="/join" component={JoinMeetingPage} />
             <Route component={NotFound} />
           </Switch>

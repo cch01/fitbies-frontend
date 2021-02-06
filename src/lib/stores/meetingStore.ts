@@ -3,7 +3,7 @@ import {
   toJS, observable, computed, action, decorate,
 } from 'mobx';
 import Peer from 'peerjs';
-// TODO split components to substores!!!
+// TODO REFACTOR THE WHOLE STORE!!!!
 interface User {
   _id: string;
   nickname: string;
@@ -56,8 +56,6 @@ interface MeetingChannelInput {
 
 // Scope: only handle channel stuff, not streaming
 class MeetingStore {
-  @observable isInitiator: boolean = false;
-
   @observable meetingId?: string;
 
   @observable meetingPassCode?: string;
@@ -67,6 +65,8 @@ class MeetingStore {
   @observable roomId?: string;
 
   @observable initiator?: User;
+
+  @observable isJoining?: boolean;
 
   @observable participants: User[] = [];
 
@@ -93,22 +93,24 @@ class MeetingStore {
     this.meetingPassCode = undefined;
     this.userId = undefined;
     this.roomId = undefined;
-    this.initiator = undefined;
     this.participants = [];
     this.messages = [];
     this.peer = undefined;
     this.joinersStreams = {};
     this.joinersCallsObjects = {};
+    this.isJoining = undefined;
   }
 
-  @action setMeeting(meetingInput: MeetingInput, userId: string):void {
+  @computed get isInitiator():boolean { return this.initiator?._id === this.userId; }
+
+  @action setMeeting(meetingInput: MeetingInput, userId: string, isJoining: boolean):void {
     this.meetingId = meetingInput._id;
     this.meetingPassCode = meetingInput.passCode;
     this.roomId = meetingInput.roomId;
     this.initiator = meetingInput.initiator;
     this.participants = meetingInput.participants;
     this.userId = userId;
-    this.isInitiator = meetingInput.initiator._id === userId;
+    this.isJoining = isJoining;
   }
 
   @action setPeer(peer: Peer): void {
@@ -136,50 +138,56 @@ class MeetingStore {
 
   @action connectToPeer = (designatedId: string, localMediaStream: MediaStream):void => {
     if (!this.peer) {
-      console.log('no peer instance');
       return;
     }
+
     console.log(`Connecting to ${designatedId}...`);
     const call = this.peer.call(designatedId, localMediaStream!, { metadata: { connectorId: this.userId } });
-    console.log(call);
+
+    const userLabel: string = designatedId === this.roomId ? this.initiator!._id : designatedId;
+
     call!.on('stream', (stream) => {
-      console.log('stream coming');
-      this.addVideoStream(designatedId, stream);
+      this.addVideoStream(userLabel, stream);
     });
 
     call!.on('close', () => {
       console.log(`media stream connection with ${designatedId} closed`);
-      this.removeVideoStream(designatedId);
+      this.removeVideoStream(userLabel);
     });
 
     call!.on('error', () => {
       console.log(`error occurred with ${designatedId} `);
-      this.removeVideoStream(designatedId);
+      this.removeVideoStream(userLabel);
     });
-    this.joinersCallsObjects = { ...this.joinersCallsObjects, [designatedId]: call };
+    this.joinersCallsObjects = { ...this.joinersCallsObjects, [userLabel]: call };
   }
 
-  @action disconnectPeer = (designatedId: string): void => {
-    if (!this.joinersCallsObjects[designatedId]) return;
-    console.log(`closing media connection with ${designatedId}`);
-    this.joinersCallsObjects[designatedId].close();
-    this.removeVideoStream(designatedId);
-    this.joinersCallsObjects = _.omit(this.joinersCallsObjects, [designatedId]);
+  @action disconnectPeer = (userId: string): void => {
+    if (!this.joinersCallsObjects[userId]) return;
+    console.log(`closing media connection with ${userId}`);
+    this.joinersCallsObjects[userId].close();
+    this.removeVideoStream(userId);
+    this.joinersCallsObjects = _.omit(this.joinersCallsObjects, [userId]);
   };
 
   @action getJoinerIds(userId:string): string[] { // except self and initiator
     if (!this.initiator) return [];
     const result = this.participants
       .filter((p) => !(p._id === userId || p._id === this.initiator?._id));
+    console.log('joinerIds result', result);
     return result.map((_r) => _r._id);
   }
 
-  private updateLeftParticipant(target: User): void {
-    const index = _.findIndex(this.participants, (_p) => _p._id === target._id);
-    if (index > -1) {
-      this.participants = this.participants.splice(index, 1, target);
+  private updateAfterParticipantsLeft(target: User): void {
+    const participantIndex = _.findIndex(this.participants, (_p) => (_p._id === target._id));
+    if (participantIndex > -1) {
+      this.participants = this.participants.splice(participantIndex, 1, target);
       this.disconnectPeer(target._id);
     }
+  }
+
+  @action userIsInitiator(userId: string): boolean {
+    return this.initiator?._id === userId;
   }
 
   @action eventDispatcher(meetingChannelInput: MeetingChannelInput): void {
@@ -206,7 +214,7 @@ class MeetingStore {
       }
 
       case MeetingEventType.LEAVE_MEETING:
-        this.updateLeftParticipant(from);
+        this.updateAfterParticipantsLeft(from);
         this.messages.push({
           type: MessageType.SYSTEM,
           sentAt: new Date(),
@@ -218,7 +226,7 @@ class MeetingStore {
         if (userToBeKickedOut!._id === this.userId) {
           this.disconnectServer();
         } else {
-          this.updateLeftParticipant(userToBeKickedOut!);
+          this.updateAfterParticipantsLeft(userToBeKickedOut!);
         }
         this.messages.push({
           type: MessageType.SYSTEM,

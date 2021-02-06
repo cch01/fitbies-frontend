@@ -4,7 +4,8 @@ import SingleLineFormField from 'components/forms/SingleLineFormField';
 import { useForm } from 'react-final-form-hooks';
 import { Message } from 'lib/stores/meetingStore';
 import _ from 'lodash';
-import ParticipantStreams from './participantList';
+import { toJS } from 'mobx';
+import ParticipantStreams from './participantStreams';
 import Video from './video';
 import styles from './meeting.module.scss';
 import ChatBox from './chatBox';
@@ -18,7 +19,7 @@ interface MeetingProps {
   onToggleMic: () => void;
   isMicOn: boolean;
   isCamOn: boolean;
-  initiatorName: string;
+  initiatorName: string | undefined;
   messages: Message[];
   meetingId: string;
   meetingPassCode?: string;
@@ -63,12 +64,13 @@ const Meeting: React.FC<MeetingProps> = ({
         {localStream && <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted={false} />}
         {!_.isEmpty(peerStreams) && (
         <div className="flex-row flex-0 flex-space-around mt-1 max-height-25p">
-          {Object.keys(peerStreams).map((userId) => {
-            console.log('not empty stream list');
-            if (!peerStreams[userId]) {
+          {console.log(toJS(peerStreams))}
+          {Object.keys(peerStreams).map((participantId) => {
+            console.log('streams length', Object.keys(peerStreams).length);
+            if (!peerStreams[participantId]) {
               return null;
             }
-            return <div className="overflow-hidden border-radius border-white mx-1 width-auto height-100p"><Video className="height-100p border-radius overflow-hidden width-100p" key={userId} stream={peerStreams[userId]} autoPlay muted={false} /></div>;
+            return <div key={participantId} className="overflow-hidden border-radius border-white mx-1 width-auto height-100p"><Video className="height-100p border-radius overflow-hidden width-100p" key={participantId} stream={peerStreams[participantId]} autoPlay muted={false} /></div>;
           })}
         </div>
         )}

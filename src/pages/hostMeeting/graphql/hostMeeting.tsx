@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
-export default gql`mutation($createMeetingInput: CreateMeetingInput!){
-  createMeeting(createMeetingInput: $createMeetingInput){
+export default gql`mutation($hostMeetingInput: HostMeetingInput!){
+  hostMeeting(hostMeetingInput: $hostMeetingInput){
       _id
       roomId
       initiator{

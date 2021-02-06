@@ -2,11 +2,12 @@ import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Video from './video';
 
-interface ParticipantListProps {
+interface ParticipantStreamsProps {
   peerStreams: {[x: string]: MediaStream};
 }
 
-const ParticipantList: React.FC<ParticipantListProps> = ({ peerStreams }) => {
+const ParticipantStreams: React.FC<ParticipantStreamsProps> = ({ peerStreams }) => {
+  console.log('stream length', peerStreams.length);
   const isMobile = useMediaQuery({
     query: '(max-width: 719px)',
   });
@@ -16,13 +17,13 @@ const ParticipantList: React.FC<ParticipantListProps> = ({ peerStreams }) => {
         if (!peerStreams[userId]) {
           return null;
         }
-        return <div className="object-fit-fill overflow-hidden border-radius border-white m1"><Video className="border-radius overflow-hidden" key={userId} stream={peerStreams[userId]} autoPlay muted={false} /></div>;
+        return <div key={userId} className="object-fit-fill overflow-hidden border-radius border-white m1"><Video className="border-radius overflow-hidden" stream={peerStreams[userId]} autoPlay muted={false} /></div>;
       })}
     </div>
   );
 };
 
-export default ParticipantList;
+export default ParticipantStreams;
 
 const Participant: React.FC<ParticipantProps> = ({ stream, ...props }) => {
   if (!stream) {
