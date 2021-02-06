@@ -27,15 +27,15 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   });
 
   return (
-    <div className="border overflow-y-scroll height-630 flex-column">
+    <>
       {messageList}
-    </div>
+    </>
   );
 };
 export default MessageList;
 
 const SelfMessage: React.FC<{message: Message, iconColor: string}> = ({ message, iconColor }) => (
-  <div className="flex-column flex-y-end">
+  <div className="flex-column flex-y-end height-auto">
     <div className="span black text-middle text-left mr-3">You</div>
     <div className={clsx(styles['chat-bubble'], styles['self-msg'])}>
       {message.content}
@@ -44,9 +44,9 @@ const SelfMessage: React.FC<{message: Message, iconColor: string}> = ({ message,
 );
 
 const TeamMessage: React.FC<{message: Message, iconColor: string}> = ({ message, iconColor }) => (
-  <div className="flex-row">
+  <div className="flex-row height-auto">
     <div className="flex-column" style={{ marginTop: 60 }}>
-      <div className="circle width-30 height-30 self-flex-y-end " style={{ backgroundColor: iconColor }}>
+      <div className="circle width-30 height-30 self-flex-y-end" style={{ backgroundColor: iconColor }}>
         <div className="h2" style={{ fontWeight: 700 }}>{message.nickname!.charAt(0).toUpperCase()}</div>
       </div>
     </div>

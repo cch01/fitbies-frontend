@@ -6,13 +6,19 @@ import styles from './chatBox.module.scss';
 import MessageList from './messageList';
 
 interface chatBoxProps {
-  onSendMessage: (msg: string) => void;
+  onSendMessage: (input: any) => void;
   messages: Message[];
   [x: string]: any;
 }
 const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
   const [isMessageTab, setIsMessageTab] = useState<boolean>(true);
-  const { form, handleSubmit, submitting } = useForm({ onSubmit: onSendMessage });
+  const { form, handleSubmit } = useForm({
+    onSubmit: (input) => {
+      onSendMessage(input);
+      form.change('message' as never, undefined);
+    },
+  });
+
   const msgs:Message[] = [
     {
       content: 'hihi', senderId: '1234', nickname: 'Terry', sentAt: new Date(), type: MessageType.SELF_CHAT,
@@ -48,40 +54,43 @@ const chatBox: React.FC<chatBoxProps> = ({ onSendMessage, messages }) => {
   // TODO: some blur effect on top, chat bubbles
   return (
   // styles['chat-main-container']
-    <div className="flex-column bg-grey-f border-radius px-2">
-      <div className="height-60 flex-row">
-        <div className={styles['panel-title']}>Group Chat</div>
-        <div className="flex-2 flex-row flex-x-end">
-          <button type="button" onMouseUp={() => setIsMessageTab(true)} className="btn-pale-green" disabled={!isMessageTab}>Messages</button>
-          <button type="button" onMouseUp={() => setIsMessageTab(false)} className="btn-pale-green ml-3" disabled={isMessageTab}>Participants</button>
+    <div className="flex-column bg-grey-f border-radius px-2 height-100p">
+      <div className="height-60 z2" style={{ flexGrow: 0 }}>
+        <div className="flex-row my-2">
+          <div className={styles['panel-title']}>Group Chat</div>
+          <div className="flex-2 flex-row flex-x-end">
+            <button type="button" onMouseUp={() => setIsMessageTab(true)} className="btn-pale-green" disabled={!isMessageTab}>Messages</button>
+            <button type="button" onMouseUp={() => setIsMessageTab(false)} className="btn-pale-green ml-3" disabled={isMessageTab}>Participants</button>
+          </div>
         </div>
       </div>
-      <MessageList messages={msgs} />
-      <div className="border-radius height-60 mb-2">
-        <form onSubmit={handleSubmit}>
-          <div className="border-radius flex-row flex-x-center flex-y-center bg-white shadow overflow-hidden">
-            <div className="width-80p flex-x-center flex-y-center">
-              <SingleLineFormField
-                form={form}
-                multiline
-                variant="filled"
-                placeholder="Write your message..."
-                name="message"
-                autoFocus
-                size="medium"
-                margin="none"
-                InputProps={{
-                  style: {
-                    backgroundColor: 'white',
-                  },
-                  disableUnderline: true,
-                }}
-              />
-            </div>
-            <button type="submit" className="ml-2 border-radius-sm square h5 bg-light-green border-light-green pale-green height-35 width-35">
-              <i className="fas fa-paper-plane h4" />
-            </button>
+      <div className="overflow-scroll width-100p height-100p" style={{ flexGrow: 0 }}>
+        <MessageList messages={messages} />
+      </div>
+      <div className="border-radius height-60 mb-2 z2" style={{ flexGrow: 0 }}>
+        <form onSubmit={handleSubmit} className="height-60 width-100p border-radius flex-row flex-x-center flex-y-center bg-white shadow overflow-hidden">
+          <div className="width-80p flex-x-center flex-y-center overflow-scroll">
+            <SingleLineFormField
+              form={form}
+              multiline
+              rows={2}
+              variant="filled"
+              placeholder="Write your message..."
+              name="message"
+              autoFocus
+              size="medium"
+              margin="none"
+              InputProps={{
+                style: {
+                  backgroundColor: 'white',
+                },
+                disableUnderline: true,
+              }}
+            />
           </div>
+          <button type="submit" className="ml-2 border-radius-sm square h5 bg-light-green border-light-green pale-green height-35 width-35">
+            <i className="fas fa-paper-plane h4" />
+          </button>
         </form>
       </div>
     </div>
