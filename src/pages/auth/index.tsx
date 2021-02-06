@@ -7,29 +7,20 @@ import { useHistory } from 'react-router-dom';
 import { NumberParam, StringParam, useQueryParams } from 'use-query-params';
 import passwordHashCreator from 'lib/utils/passwordHashCreator';
 import { observer } from 'mobx-react';
-import subscriptionTest from 'graphql/subscriptionTest';
-import me from 'graphql/me';
 import signInMutation from './graphql/signIn';
-import joinMeetingMutation from './graphql/joinMeeting';
-import Auth, { JoinMeetingInput, SignInInput } from './components/auth';
+import Auth, { SignUpInput, SignInInput } from './components/auth';
 
 const LoginPage:React.FC = observer(() => {
   const [{ redirect }, setRedirect] = useQueryParams({ redirect: StringParam });
   const history = useHistory();
   const { authStore } = useStores();
   const [runSignInMutation] = useMutation(signInMutation, { fetchPolicy: 'no-cache' });
-  const [runJoinMeetingMutation] = useMutation(joinMeetingMutation);
-  const [runQuery, { called, data: meData }] = useLazyQuery(me);
-  console.log(meData);
-  const client = useApolloClient();
-
-  useEffect(() => { meData && authStore.setViewer(meData.me); }, [meData]);
-
+  // TODO add signup anonymousSignUp mutation
   useEffect(() => {
-    if (authStore.isLoggedIn) {
+    if (authStore.isRegistered) {
       history.replace(decodeURIComponent(redirect as string) ?? '/');
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.isRegistered]);
 
   const onSignIn = (signInData: SignInInput): void => {
     const hashedPassword = passwordHashCreator(signInData.password);
@@ -41,18 +32,17 @@ const LoginPage:React.FC = observer(() => {
       console.log('Clearing token');
       authStore.logout();
     });
-
-    runQuery();
   };
 
-  const onJoinMeeting = (joinMeetingData: JoinMeetingInput): void => {
-    runJoinMeetingMutation({ variables: joinMeetingData }).then((result) => {
-      authStore.setToken(result.data.token);
-      authStore.setViewer(result.data.signIn.user);
-    });
+  const onSignUp = (signUpInput: SignUpInput): void => {
+    // TODO
   };
 
-  return <Auth onSignIn={onSignIn} onJoinMeeting={onJoinMeeting} other={runQuery} />;
+  const onAnonymousSignUp = (input: {nickname: string}): void => {
+    // TODO
+  };
+
+  return <Auth onSignIn={onSignIn} onAnonymousSignUp={onAnonymousSignUp} onSignUp={onSignUp} />;
 });
 
 export default LoginPage;

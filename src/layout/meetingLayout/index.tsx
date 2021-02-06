@@ -9,7 +9,7 @@ const MeetingLayout:React.FC<{ children: React.ReactNode}> = observer(({ childre
   const { uiStore: { title }, authStore } = useStores();
   const history = useHistory();
   const location = useLocation();
-  if (!authStore.isLoggedIn) {
+  if (!authStore.isRegistered) {
     history.replace({
       pathname: '/login',
       search: location.search === '/' ? '' : `?redirect=${encodeURIComponent(location.pathname + location.search)}`,

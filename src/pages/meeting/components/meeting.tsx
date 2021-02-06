@@ -10,6 +10,7 @@ import Video from './video';
 import styles from './meeting.module.scss';
 import InfoPanel from './infoPanel';
 
+// TODO: change all dependent components to using HIDE
 interface MeetingProps {
   localStream?: MediaStream;
   peerStreams: {[x: string]: MediaStream};
