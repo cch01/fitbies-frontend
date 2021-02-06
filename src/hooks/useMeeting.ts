@@ -25,7 +25,8 @@ export const useMeeting = ({
   let peer: Peer;
   const peerId = isInitiator ? targetId : userId;
   useEffect(() => {
-    if (!_.isEmpty(localMediaStream?.id)) {
+    console.log('peer connections ', peer?.connections);
+    if (!_.isEmpty(localMediaStream?.id) || _.isEmpty(peer?.connections)) {
       peer = new Peer(peerId, {
         key: KEY, host: 'localhost', path: '/meetings', port: PORT,
       });
@@ -57,7 +58,7 @@ export const useMeeting = ({
       addCallObject(connectorId, call);
     });
     return () => { peer?.disconnect(); peer?.destroy(); };
-  }, [localMediaStream?.id]);
+  }, [localMediaStream]);
 
   return {
     loading,

@@ -1,8 +1,6 @@
 import { useStores } from 'hooks/useStores';
-import React, {
-  createRef, RefObject, useEffect, useRef, useState,
-} from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
 import { useMutation, useSubscription } from '@apollo/client';
@@ -12,7 +10,6 @@ import { observer } from 'mobx-react-lite';
 import meetingChannel from './graphql/meetingChannel';
 import Meeting from './components/meeting';
 import sendMeetingMessage from './graphql/sendMeetingMessage';
-import leaveMeeting from './graphql/leaveMeeting';
 
 const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
@@ -45,11 +42,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
 
   const [runSendMeetingMessageMutation] = useMutation(sendMeetingMessage);
 
-  const [runLeaveMeetingMutation] = useMutation(leaveMeeting);
-
-  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({
-    video: isCamOn, audio: isMicOn, width: 640, height: 360,
-  });
+  const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
 
   userMediaError && console.log('err', userMediaError);
   console.log('meetingId', meetingStore.meetingId);
@@ -78,15 +71,20 @@ const MeetingPage: React.FC = React.memo(observer(() => {
       console.log('channel event come!');
       meetingStore.eventDispatcher(meetingChannelData.meetingChannel);
     }
-    return setStopSubscription(true);
   }, [meetingChannelData]);
 
   useEffect(() => {
-    if (!_.isEmpty(currentMessages)) {
-      console.log('new message!');
-      console.log(currentMessages);
+    if (!stream) {
+      return;
     }
-  }, [currentMessages]);
+    stream.getVideoTracks().forEach((track) => {
+      track.enabled = isCamOn;
+    });
+
+    stream.getAudioTracks().forEach((track) => {
+      track.enabled = isMicOn;
+    });
+  }, [stream, isCamOn, isMicOn]);
 
   const onToggleMic = () => { setIsMicOn((val) => !val); };
   const onToggleCam = () => { setIsCamOn((val) => !val); };
@@ -99,9 +97,8 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   };
 
   const onLeaveMeeting = (): void => {
-    console.log('Leave meeting pressed');
-    runLeaveMeetingMutation({ variables: { userId, meetingId } });
     meetingStore.reset();
+    meetingStore.disconnectServer();
     history.replace('/landing');
   };
 

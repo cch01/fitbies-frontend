@@ -90,6 +90,7 @@ class MeetingStore {
     console.log('reset meeting store');
     this.meetingId = undefined;
     this.meetingPassCode = undefined;
+    this.meetingPassCode = undefined;
     this.userId = undefined;
     this.roomId = undefined;
     this.initiator = undefined;

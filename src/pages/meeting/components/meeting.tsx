@@ -59,53 +59,52 @@ const Meeting: React.FC<MeetingProps> = ({
         )}
       </div>
       {/* TODO: put control btns at the bottom */}
-      {localStream && (
-        <div className="mt-2 py-2 flex-column flex-x-center flex-y-center flex-grow-1 width-100p overflow-hidden border-radius shadow p2 bg-black">
-          <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted={false} />
-          {!_.isEmpty(peerStreams) && (
-          <div className="flex-row flex-0 flex-space-around mt-1 max-height-25p">
-            {Object.keys(peerStreams).map((userId) => {
-              if (!peerStreams[userId]) {
-                return null;
-              }
-              return <div className="overflow-hidden border-radius border-white mx-1 width-auto height-100p"><Video className="height-100p border-radius overflow-hidden width-100p" key={userId} stream={peerStreams[userId]} autoPlay muted={false} /></div>;
-            })}
+      <div className="mt-2 py-2 flex-column flex-x-center flex-y-center flex-grow-1 width-100p overflow-hidden border-radius shadow p2 bg-black">
+        {localStream && <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted={false} />}
+        {!_.isEmpty(peerStreams) && (
+        <div className="flex-row flex-0 flex-space-around mt-1 max-height-25p">
+          {Object.keys(peerStreams).map((userId) => {
+            console.log('not empty stream list');
+            if (!peerStreams[userId]) {
+              return null;
+            }
+            return <div className="overflow-hidden border-radius border-white mx-1 width-auto height-100p"><Video className="height-100p border-radius overflow-hidden width-100p" key={userId} stream={peerStreams[userId]} autoPlay muted={false} /></div>;
+          })}
+        </div>
+        )}
+        <div className="position-absolute bottom height-100px mb-2 z2 flex-row width-100p flex-x-center">
+          <div
+            role="button"
+            tabIndex={0}
+            onMouseUp={onToggleCam}
+            className="hoverEnlarge transition circle width-40 height-40 overflow-hidden"
+          >
+            <div className="blur position-absolute width-100p height-100p bg-grey-7" />
+            <div className="white">
+              <i className={`fas ${isCamOn ? 'fa-video-slash' : 'fa-video'} h4`} />
+            </div>
           </div>
-          )}
-          <div className="position-absolute bottom height-100px mb-2 z2 flex-row width-100p flex-x-center">
-            <div
-              role="button"
-              tabIndex={0}
-              onMouseUp={onToggleCam}
-              className="hoverEnlarge transition circle width-40 height-40 overflow-hidden"
-            >
-              <div className="blur position-absolute width-100p height-100p bg-grey-7" />
-              <div className="white">
-                <i className={`fas ${isCamOn ? 'fa-video-slash' : 'fa-video'} h4`} />
-              </div>
-            </div>
-            <div
-              role="button"
-              tabIndex={-1}
-              onMouseUp={onLeaveMeeting}
-              className="hoverEnlarge transition square border-radius-l bg-grey-f width-55 height-55 white bg-red h3 opacity=75 mx-5"
-            >
-              <i className="fas fa-phone-slash" />
-            </div>
-            <div
-              role="button"
-              tabIndex={-2}
-              onMouseUp={onToggleMic}
-              className="circle width-40 height-40 overflow-hidden hoverEnlarge transition"
-            >
-              <div className="blur position-absolute width-100p height-100p bg-grey-7" />
-              <div className="white">
-                <i className={`fas ${isMicOn ? 'fa-microphone-slash' : 'fa-microphone'} h4`} />
-              </div>
+          <div
+            role="button"
+            tabIndex={-1}
+            onMouseUp={onLeaveMeeting}
+            className="hoverEnlarge transition square border-radius-l bg-grey-f width-55 height-55 white bg-red h3 opacity=75 mx-5"
+          >
+            <i className="fas fa-phone-slash" />
+          </div>
+          <div
+            role="button"
+            tabIndex={-2}
+            onMouseUp={onToggleMic}
+            className="circle width-40 height-40 overflow-hidden hoverEnlarge transition"
+          >
+            <div className="blur position-absolute width-100p height-100p bg-grey-7" />
+            <div className="white">
+              <i className={`fas ${isMicOn ? 'fa-microphone-slash' : 'fa-microphone'} h4`} />
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
     <div className="height-100p max-width-350">
       <ChatBox onSendMessage={onSendMessage} messages={messages} />
