@@ -4,11 +4,20 @@ import SingleLineFormField from 'components/forms/SingleLineFormField';
 import { FormApi } from 'final-form';
 import React from 'react';
 
+export interface SignUpInput {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nickname: string;
+  firstName: string;
+  lastName: string;
+}
+
 interface SignUpFormProps {
   handleSignUpSubmit: (event?: React.SyntheticEvent<HTMLFormElement, Event> | undefined) => Promise<object | undefined> | undefined;
-  form: FormApi<{nickname: string;}, Partial<{ nickname: string;}>>
-  toggleSignUpForm(): void;
-  toggleAnonymousJoin(): void;
+  form: FormApi<SignUpInput, Partial<SignUpInput>>;
+  toggleSignUpForm(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
+  toggleAnonymousJoin(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
   isHosting: boolean;
   className: any;
 }
@@ -45,6 +54,7 @@ const SignUpForm:React.FC<SignUpFormProps> = ({
         required
         name="email"
         label="Email"
+        type="email"
       />
       <SingleLineFormField
         form={form}
@@ -61,6 +71,7 @@ const SignUpForm:React.FC<SignUpFormProps> = ({
         margin="normal"
         fullWidth
         required
+        type="password"
         name="password"
         label="Password"
       />
@@ -70,6 +81,7 @@ const SignUpForm:React.FC<SignUpFormProps> = ({
         margin="normal"
         fullWidth
         required
+        type="password"
         name="confirmPassword"
         label="Confirm Password"
       />
@@ -90,7 +102,7 @@ const SignUpForm:React.FC<SignUpFormProps> = ({
             Quick join with your nickname
           </Link>
         </Grid>
-        <Grid item className={clsx('text-right', 'pointer', 'fullwidth')}>
+        <Grid item className={clsx('text-right', 'pointer', { fullwidth: isHosting })}>
           <Link variant="body2" onClick={toggleSignUpForm}>
             Back to login
           </Link>

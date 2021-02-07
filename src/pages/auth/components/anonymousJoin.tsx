@@ -6,17 +6,20 @@ import React from 'react';
 
 interface AnonymousJoinFormProps {
   handleAnonymousSignUpSubmit: (event?: React.SyntheticEvent<HTMLFormElement, Event> | undefined) => Promise<object | undefined> | undefined;
-  form: FormApi<{nickname: string;}, Partial<{ nickname: string;}>>
-  toggleSignUpForm(): void;
-  toggleFullSignUpForm(): void;
+  form: FormApi<AnonymousSignUpInput, Partial<AnonymousSignUpInput>>
+  toggleSignUpForm(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
+  toggleFullSignUpForm(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
   className: any
+}
+export interface AnonymousSignUpInput {
+  nickname: string;
 }
 
 const AnonymousJoinForm: React.FC<AnonymousJoinFormProps> = ({
   handleAnonymousSignUpSubmit, form, className, toggleSignUpForm, toggleFullSignUpForm,
 }) => (
   <div className={className}>
-    <form noValidate onSubmit={handleAnonymousSignUpSubmit}>
+    <form onSubmit={handleAnonymousSignUpSubmit}>
       <SingleLineFormField
         form={form}
         variant="outlined"
@@ -24,7 +27,7 @@ const AnonymousJoinForm: React.FC<AnonymousJoinFormProps> = ({
         required
         fullWidth
         label="Nickname"
-        name="nickName"
+        name="nickname"
         autoFocus
       />
       <Button
@@ -34,7 +37,7 @@ const AnonymousJoinForm: React.FC<AnonymousJoinFormProps> = ({
         color="primary"
         style={{ marginTop: 20, marginBottom: 20 }}
       >
-        Join meeting
+        Continue
       </Button>
     </form>
     <div className="fullwidth">

@@ -2,19 +2,23 @@ import { Button, Grid, Link } from '@material-ui/core';
 import SingleLineFormField from 'components/forms/SingleLineFormField';
 import { FormApi } from 'final-form';
 import React from 'react';
-import { SignInInput } from './auth';
+
+export interface SignInInput {
+  email: string;
+  password: string;
+}
 
 interface SignInFormProps {
   handleSignInSubmit: (event?: React.SyntheticEvent<HTMLFormElement, Event> | undefined) => Promise<object | undefined> | undefined;
   form: FormApi<SignInInput, Partial<SignInInput>>
-  toggleSignUpForm(): void;
+  toggleSignUpForm(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
   className: any
 }
 
 const SignInForm: React.FC<SignInFormProps> = ({
   handleSignInSubmit, form, toggleSignUpForm, className,
 }) => (
-  <form noValidate onSubmit={handleSignInSubmit} className={className}>
+  <form onSubmit={handleSignInSubmit} className={className}>
     <SingleLineFormField
       form={form}
       variant="outlined"
