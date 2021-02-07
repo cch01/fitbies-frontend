@@ -34,7 +34,6 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ onSendMessage, messages }) => {
 
   useEffect(() => { scrollDownWhenMessage(); }, [messages.length]);
 
-  // TODO: some blur effect on top, chat bubbles
   return (
     <div className="flex-column bg-grey-f border-radius px-2 height-100p">
       <div className="height-60 z2">

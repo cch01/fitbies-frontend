@@ -26,7 +26,7 @@ interface MeetingProps {
   meetingPassCode?: string;
   isInitiator: boolean;
 }
-
+// TODO: alrt to confirm leaving when pre page
 const Meeting: React.FC<MeetingProps> = ({
   localStream,
   peerStreams,
@@ -46,9 +46,6 @@ const Meeting: React.FC<MeetingProps> = ({
     <div className="flex-column pr-2 flex-70p flex-x-start flex-y-center">
       <div className="flex-row width-100p flex-space-between">
         <div className="flex-row flex-space-between">
-          {/* <div className="square border-radius-sm bg-grey-f width-25 height-25">
-            <i className="fas fa-chevron-left" />
-          </div> */}
           <div className="h3">{`Meeting initiated by ${initiatorName}`}</div>
         </div>
         {isInitiator && (
@@ -60,7 +57,6 @@ const Meeting: React.FC<MeetingProps> = ({
         </div>
         )}
       </div>
-      {/* TODO: put control btns at the bottom */}
       <div className="mt-2 py-2 flex-column flex-x-center flex-y-center flex-grow-1 width-100p overflow-hidden border-radius shadow p2 bg-black">
         {localStream && <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted={false} />}
         {!_.isEmpty(peerStreams) && (

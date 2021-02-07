@@ -3,7 +3,8 @@ import {
   toJS, observable, computed, action, decorate,
 } from 'mobx';
 import Peer from 'peerjs';
-// TODO REFACTOR THE WHOLE STORE!!!!
+import { toast } from 'react-toastify';
+
 interface User {
   _id: string;
   nickname: string;
@@ -195,7 +196,6 @@ class MeetingStore {
     const { toMeeting, userToBeKickedOut, message } = meetingChannelInput;
     if (toMeeting._id !== this.meetingId) return;
 
-    // TODO: with snack bar / toast
     switch (meetingChannelInput.type) {
       case MeetingEventType.USER_JOINED: {
         const index = _.findIndex(this.participants, (_p) => _p._id === from._id);
@@ -238,7 +238,7 @@ class MeetingStore {
       case MeetingEventType.END_MEETING:
         this.disconnectServer();
         this.reset();
-        // TODO: toast for end meeting
+        toast.info('Initiator has ended the meeting.');
         break;
 
       case MeetingEventType.MESSAGE:
