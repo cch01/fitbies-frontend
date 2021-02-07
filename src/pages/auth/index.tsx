@@ -42,7 +42,7 @@ const LoginPage:React.FC = observer(() => {
     // TODO
   };
 
-  return <Auth onSignIn={onSignIn} onAnonymousSignUp={onAnonymousSignUp} onSignUp={onSignUp} />;
+  return <Auth isHosting={redirect === '/host'} onSignIn={onSignIn} onAnonymousSignUp={onAnonymousSignUp} onSignUp={onSignUp} />;
 });
 
 export default LoginPage;
