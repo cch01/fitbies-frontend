@@ -6,6 +6,7 @@ import { onError } from '@apollo/client/link/error';
 import { useMemo } from 'react';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { toast } from 'react-toastify';
 
 export const useInitApollo = (token: string | null, onUnauthorizedError: Function, onReceivedResponse: Function):ApolloClient<NormalizedCacheObject> => useMemo(() => createApolloClient(token, onUnauthorizedError, onReceivedResponse), [token]);
 
@@ -34,6 +35,7 @@ const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError((
   if (graphQLErrors) {
     console.log('errorrrrr');
     graphQLErrors.forEach(({ message, locations, path }) => {
+      toast.error(message);
       // eslint-disable-next-line no-console
       console.error(`[GraphQL error]: ${message}`, {
         locations,

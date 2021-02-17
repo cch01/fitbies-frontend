@@ -21,10 +21,9 @@ const App: React.FC = observer(() => {
   const history = useHistory();
   const location = useLocation();
   const [redirect, setRedirect] = useQueryParam('redirect', StringParam);
-
+  // TODO: check join strings
   console.log('current Token', authStore.token);
   const client = useInitApollo(authStore.token, () => {
-    // eslint-disable-next-line no-console
     console.warn('Clearing cookie...');
     authStore.logout();
   }, (token:string) => authStore.setToken(token.replace('Bearer ', '')));
