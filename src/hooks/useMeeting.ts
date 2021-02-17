@@ -27,7 +27,7 @@ export const useMeeting = ({
   useEffect(() => {
     if (!_.isEmpty(localMediaStream?.id)) {
       peer = new Peer(peerId, {
-        key: KEY, host: 'localhost', path: '/meetings', port: PORT,
+        key: KEY, host: process.env.REACT_APP_PEER_URI, path: '/meetings', port: PORT,
       });
     }
     peer?.on('open', (id) => {
