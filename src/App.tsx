@@ -2,7 +2,7 @@ import React, { lazy, useEffect } from 'react';
 import {
   Route, Switch, useLocation, useHistory,
 } from 'react-router-dom';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useInitApollo } from 'hooks/useInitApollo';
