@@ -59,7 +59,8 @@ const LoginPage:React.FC = observer(() => {
 
   const onSignUp = (signUpInput: SignUpInput): void => {
     const { confirmPassword, ...filteredInput } = signUpInput;
-    runSignUpMutation({ variables: { input: filteredInput } });
+    const password = Buffer.from(filteredInput.password).toString('base64');
+    runSignUpMutation({ variables: { input: { ...filteredInput, password } } });
   };
 
   const onAnonymousSignUp = ({ nickname }: AnonymousSignUpInput): void => {
