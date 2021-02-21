@@ -41,8 +41,9 @@
 		.max-width-#{$i * 5}vw {
 			max-width:$i * 5vw;
     }
-    	.max-width-#{$i * 5}px {
-			max-width:$i * 5px;
+
+    .max-width-#{$i * 5}p {
+			max-width:0% + $i * 5;
 		}
 
 		.min-width-#{$i * 5}vw {
@@ -52,7 +53,11 @@
 		.min-width-#{$i * 5}px {
 			min-width:$i * 5px;
     }
-    
+
+    .min-width-#{$i * 5}p {
+			min-width:0% + $i * 5;
+		}
+
     .min-width-#{$i * 5}p {
       min-width:0% + $i * 5;
     }

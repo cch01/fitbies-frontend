@@ -17,7 +17,7 @@ const JoinMeeting: React.FC<{onJoinMeeting: (input: JoinRoomInput) => void}> = o
       <div className="h1 text-center max-width-100p py-5">
         Join a meeting
       </div>
-      <form noValidate onSubmit={handleSubmit} className="px-3 py-3 max-width-450">
+      <form onSubmit={handleSubmit} className="px-3 py-3 max-width-450">
         <SingleLineFormField
           form={form}
           variant="outlined"

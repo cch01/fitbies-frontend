@@ -55,7 +55,8 @@ const App: React.FC = observer(() => {
       <HelmetProvider>
         <div className="App">
           <Switch>
-            <Route exact path="/activation/:token" component={AuthRouter} />
+            <Route path="/activation/:token" component={AuthRouter} />
+            <Route path="/registered" component={AuthRouter} />
             <Route path="/landing" component={AuthRouter} />
             <Route path="/login" component={AuthRouter} />
             <Route path="/" component={MainRouter} />
