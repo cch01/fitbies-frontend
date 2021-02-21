@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 
 const PORT = parseInt(process.env.REACT_APP_PEER_SERVER_PORT!, 10) || undefined;
 const KEY = process.env.REACT_APP_PEER_SERVER_KEY;
+const ENV = process.env.REACT_APP_ENVIRONMENT;
+
 interface UsePeerProps {
   userId: string;
   targetId: string;
@@ -27,7 +29,12 @@ export const useMeeting = ({
   useEffect(() => {
     if (!_.isEmpty(localMediaStream?.id)) {
       peer = new Peer(peerId, {
-        key: KEY, host: process.env.REACT_APP_PEER_URI, path: '/meetings', port: PORT,
+
+        key: KEY,
+        host: process.env.REACT_APP_PEER_URI,
+        path: '/meetings',
+        ...ENV === 'development' && { port: PORT },
+        secure: ENV === 'production' || ENV === 'staging',
       });
     }
     peer?.on('open', (id) => {
