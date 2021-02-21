@@ -15,11 +15,13 @@ import { ActivationPageProps } from './activation';
 const Landing: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/landing'));
 const LoginPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/auth'));
 const ActivationPage: React.LazyExoticComponent<React.FC<ActivationPageProps>> = lazy(() => import('pages/activation'));
+const RegisteredAccountPage: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/registeredAccount'));
 
 const AuthRouter: React.FC = observer(() => (
   <AuthLayout>
     <Suspense fallback={<LoadingScreen />}>
       <Switch>
+        <Route exact path="/registered" component={RegisteredAccountPage} />
         <Route exact path="/activation/:token" component={ActivationPage} />
         <Route exact path="/landing" component={Landing} />
         <Route exact path="/login" component={LoginPage} />

@@ -8,6 +8,7 @@ import { NumberParam, StringParam, useQueryParams } from 'use-query-params';
 import passwordHashCreator from 'lib/utils/passwordHashCreator';
 import { observer } from 'mobx-react';
 import { toast } from 'react-toastify';
+import * as sha512 from 'js-sha512';
 import signInGQL from './graphql/signIn';
 import signUpGQL from './graphql/signUp';
 import anonymousSignUpGQL from './graphql/anonymousSignUp';
@@ -23,9 +24,13 @@ const LoginPage:React.FC = observer(() => {
   const [runSignInMutation] = useMutation(signInGQL, { fetchPolicy: 'no-cache' });
   const [runSignUpMutation] = useMutation(signUpGQL, {
     fetchPolicy: 'no-cache',
-    onCompleted: () => {
+    onCompleted: (data) => {
       toast.success('Sign up successfully.');
-      history.replace(decodeURIComponent(redirect as string) ?? '/');
+      history.replace({
+        pathname: '/registered',
+        search: redirect ? `?redirect=${encodeURIComponent(redirect as string)}` : '',
+        state: { email: data.signUp.email, viewerData: data.signUp },
+      });
     },
     onError: (err) => {
       console.log(err);
@@ -59,7 +64,7 @@ const LoginPage:React.FC = observer(() => {
 
   const onSignUp = (signUpInput: SignUpInput): void => {
     const { confirmPassword, ...filteredInput } = signUpInput;
-    const password = Buffer.from(filteredInput.password).toString('base64');
+    const password = sha512.sha512(filteredInput.password);
     runSignUpMutation({ variables: { input: { ...filteredInput, password } } });
   };
 
