@@ -35,7 +35,7 @@ const createErrorLink = (onUnauthorizedError: Function): ApolloLink => onError((
   if (graphQLErrors) {
     console.log('errorrrrr');
     graphQLErrors.forEach(({ message, locations, path }) => {
-      toast.error(message);
+      // toast.error(message);
       // eslint-disable-next-line no-console
       console.error(`[GraphQL error]: ${message}`, {
         locations,

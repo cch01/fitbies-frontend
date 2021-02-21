@@ -58,7 +58,7 @@ const Meeting: React.FC<MeetingProps> = ({
         )}
       </div>
       <div className="mt-2 py-2 flex-column flex-x-center flex-y-center flex-grow-1 width-100p overflow-hidden border-radius shadow p2 bg-black">
-        {localStream && <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted={false} />}
+        {localStream && <Video className="border-radius overflow-hidden width-100p" stream={localStream} autoPlay muted />}
         {!_.isEmpty(peerStreams) && (
         <div className="flex-row flex-0 flex-space-around mt-1 max-height-25p">
           {Object.keys(peerStreams).map((participantId) => {
