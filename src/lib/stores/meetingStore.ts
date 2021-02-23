@@ -238,7 +238,7 @@ class MeetingStore {
       case MeetingEventType.END_MEETING:
         this.disconnectServer();
         this.reset();
-        toast.info('Initiator has ended the meeting.');
+        toast.info('Initiator has ended the meeting');
         break;
 
       case MeetingEventType.MESSAGE:
