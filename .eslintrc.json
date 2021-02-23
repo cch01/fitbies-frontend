@@ -37,6 +37,7 @@
       "react/jsx-props-no-spreading":0,
       "jsx-a11y/media-has-caption": 0,
       "no-param-reassign": 0,
-      "no-shadow": 0
+      "no-shadow": 0,
+      "jsx-a11y/no-noninteractive-element-interactions": 0
     }
 }

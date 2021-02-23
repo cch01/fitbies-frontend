@@ -7,9 +7,11 @@ import { useMutation, useSubscription } from '@apollo/client';
 import { useUserMedia } from 'hooks/useUserMedia';
 import LoadingScreen from 'components/loadingScreen';
 import { observer } from 'mobx-react-lite';
+import { toast } from 'react-toastify';
 import meetingChannel from './graphql/meetingChannel';
 import Meeting from './components/meeting';
-import sendMeetingMessage from './graphql/sendMeetingMessage';
+import sendMeetingMessageGQL from './graphql/sendMeetingMessage';
+import inviteMeetingGQL from './graphql/inviteMeeting';
 
 const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
@@ -41,7 +43,12 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     data: meetingChannelData, error: meetingChannelError,
   } = useSubscription(meetingChannel, { variables: { userId, meetingId }, skip: stopSubscription });
 
-  const [runSendMeetingMessageMutation] = useMutation(sendMeetingMessage);
+  const [sendMeetingMessageMutation] = useMutation(sendMeetingMessageGQL);
+
+  const [inviteMeeting] = useMutation(inviteMeetingGQL, {
+    onCompleted: () => toast.success('Invitation sent'),
+    onError: () => toast.error('Something went wrong'),
+  });
 
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
 
@@ -94,7 +101,11 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   const onSendMessage = (input: Record<string, string>): void => {
     const { message } = input;
     if (!message) return;
-    runSendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
+    sendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
+  };
+
+  const onInviteByEmail = (input: Record<string, string>): void => {
+    inviteMeeting({ variables: { inviteMeetingInput: { userId, email: input.email, meetingId } } });
   };
 
   const onLeaveMeeting = (): void => {
@@ -110,6 +121,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   return (
     <>
       <Meeting
+        onInviteByEmail={onInviteByEmail}
         isInitiator={isInitiator}
         meetingId={meetingId!}
         meetingPassCode={meetingPassCode}

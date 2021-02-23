@@ -25,7 +25,7 @@ const LoginPage:React.FC = observer(() => {
   const [runSignUpMutation] = useMutation(signUpGQL, {
     fetchPolicy: 'no-cache',
     onCompleted: (data) => {
-      toast.success('Sign up successfully.');
+      toast.success('Sign up successfully');
       history.replace({
         pathname: '/registered',
         search: redirect ? `?redirect=${encodeURIComponent(redirect as string)}` : '',
@@ -34,13 +34,13 @@ const LoginPage:React.FC = observer(() => {
     },
     onError: (err) => {
       console.log(err);
-      toast.error(err.message ?? 'Something went wrong.');
+      toast.error(err.message ?? 'Something went wrong');
     },
   });
   const [runAnonymousMutation] = useMutation(anonymousSignUpGQL, {
     fetchPolicy: 'no-cache',
-    onCompleted: () => { toast.success('Sign up successfully.'); },
-    onError: (err) => { console.log(err); toast.error(err.message ?? 'Something went wrong.'); },
+    onCompleted: () => { toast.success('Sign up successfully'); },
+    onError: (err) => { console.log(err); toast.error(err.message ?? 'Something went wrong'); },
   });
 
   useEffect(() => {
