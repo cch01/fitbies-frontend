@@ -11,6 +11,7 @@
 .tile {
   @extend .text-center;
   @extend .pointer;
+  @extend .btn-pale-green;
   @extend .border-radius;
   @extend .border;
   @extend .width-200;

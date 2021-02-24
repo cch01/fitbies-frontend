@@ -3,31 +3,34 @@ import {
 } from 'mobx';
 
 const expires = parseInt(process.env.REACT_APP_LOGIN_TOKEN_EXPIRY_DAY as string, 10);
+
+const emptyViewer = {
+  _id: undefined,
+  firstName: undefined,
+  lastName: undefined,
+  email: undefined,
+  type: undefined,
+  nickname: undefined,
+  isActivated: false,
+};
 interface Viewer {
   _id?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
   type?: string;
-  nickName?: string;
+  nickname?: string;
   isActivated: boolean;
 }
 class AuthStore {
-  @observable token = localStorage.getItem('access-token');
+  @observable token = localStorage.getItem('access-token') || '';
 
   @observable
-  viewer: Viewer = {
-    _id: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    email: undefined,
-    type: undefined,
-    nickName: undefined,
-    isActivated: false,
-  };
+  viewer: Viewer = emptyViewer;
 
   @action
   setToken = (newToken: string) => {
+    console.log('set token', newToken);
     localStorage.setItem('access-token', newToken);
     this.token = newToken;
   }
@@ -39,8 +42,10 @@ class AuthStore {
 
   @action
   logout = () => {
+    console.log('rm token');
     localStorage.removeItem('access-token');
-    this.token = localStorage.getItem('access-token');
+    this.token = '';
+    this.viewer = emptyViewer;
   }
 
   @computed

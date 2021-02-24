@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useStores } from 'hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -7,7 +6,6 @@ import styles from './index.module.scss';
 
 const LandingPage: React.FC = observer(() => {
   const history = useHistory();
-  const { authStore } = useStores();
   const onClickHost:any = () => {
     history.push('/host');
   };
