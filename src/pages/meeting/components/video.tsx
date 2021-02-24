@@ -9,6 +9,7 @@ interface VideoProps {
   [x:string]: any;
 }
 
+// TODO add mute / off video btn on right top
 const Video:React.FC<VideoProps> = ({
   stream, muted = false, autoPlay = true, ...props
 }) => {
