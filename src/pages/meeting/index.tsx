@@ -15,12 +15,10 @@ import inviteMeetingGQL from './graphql/inviteMeeting';
 
 const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
-  const [stopSubscription, setStopSubscription] = useState<boolean>(false);
+  const [stopSubscription] = useState<boolean>(false);
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isCamOn, setIsCamOn] = useState<boolean>(true);
-  const count = useRef<number>(1);
-  // eslint-disable-next-line no-plusplus
-  console.warn('rerender meeting page', count.current++);
+
   const { authStore, meetingStore, uiStore } = useStores();
   uiStore.setTitle(`Meeting with ${meetingStore.initiator?.nickname}`);
   const {
@@ -39,9 +37,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     (_.isNil(roomId || meetingId)) && history.push('/landing');
   });
   const userId = authStore.viewer._id!;
-  const {
-    data: meetingChannelData, error: meetingChannelError,
-  } = useSubscription(meetingChannel, { variables: { userId, meetingId }, skip: stopSubscription });
+  const { data: meetingChannelData } = useSubscription(meetingChannel, { variables: { userId, meetingId }, skip: stopSubscription });
 
   const [sendMeetingMessageMutation] = useMutation(sendMeetingMessageGQL);
 

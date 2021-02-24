@@ -56,7 +56,7 @@ const InvitationModal: React.FC<InvitationModalProps> = ({
             </div>
             <div className={clsx({ hide: !meetingPassCode }, 'flex-row flex-y-center flex-x-center mt-2 fullwidth')}>
               <p className="mr-2 nowrap">Pass code: </p>
-              <TextField fullWidth disabled variant="outlined" value={meetingPassCode} margin="dense" />
+              <TextField fullWidth disabled variant="outlined" value={meetingPassCode || ''} margin="dense" />
             </div>
             <hr className="mt-1" />
             <form onSubmit={handleSubmit}>
@@ -70,7 +70,7 @@ const InvitationModal: React.FC<InvitationModalProps> = ({
                     autoFocus
                     size="small"
                     margin="dense"
-                    autoComplete
+                    autoComplete="email"
                     required
                   />
                 </div>
