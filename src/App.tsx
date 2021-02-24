@@ -1,6 +1,6 @@
-import React, { lazy, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
-  Route, Switch, useLocation, useHistory,
+  Route, Switch, useHistory,
 } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,15 +13,11 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import MainRouter from 'pages/MainRouter';
 import AuthRouter from 'pages/AuthRouter';
 
-const Landing: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/landing'));
-const Auth: React.LazyExoticComponent<React.FC> = lazy(() => import('pages/auth'));
-
 const App: React.FC = observer(() => {
   const { authStore } = useStores();
   const history = useHistory();
-  const location = useLocation();
-  const [redirect, setRedirect] = useQueryParam('redirect', StringParam);
-  // TODO: check join strings
+  const [redirect] = useQueryParam('redirect', StringParam);
+
   console.log('current Token', authStore.token);
   const client = useInitApollo(authStore.token, () => {
     console.warn('Clearing cookie...');

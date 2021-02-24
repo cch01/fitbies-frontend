@@ -6,7 +6,7 @@ import { useForm } from 'react-final-form-hooks';
 
 export interface JoinRoomInput {
   meetingId: string;
-  passCode?: string;
+  passCode?: string | null;
 }
 
 const JoinMeeting: React.FC<{onJoinMeeting: (input: JoinRoomInput) => void}> = observer(({ onJoinMeeting }) => {

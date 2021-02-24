@@ -1,12 +1,12 @@
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Message } from 'lib/stores/meetingStore';
 import _ from 'lodash';
+import { useHistory } from 'react-router-dom';
 import Video from './video';
 import InfoPanel from './infoPanel';
 import InvitationModal from './invitationModal';
 
-// TODO: change all dependent components to using HIDE
 interface MeetingProps {
   localStream?: MediaStream;
   peerStreams: {[x: string]: MediaStream};
@@ -23,7 +23,6 @@ interface MeetingProps {
   meetingPassCode?: string;
   isInitiator: boolean;
 }
-// TODO: alrt to confirm leaving when pre page
 const Meeting: React.FC<MeetingProps> = ({
   localStream,
   peerStreams,
@@ -42,9 +41,27 @@ const Meeting: React.FC<MeetingProps> = ({
 }) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  // TODO modal
   const onOpenInviteModal = () => setShowInviteModal(true);
   const onCloseInviteModal = () => setShowInviteModal(false);
+  const history = useHistory();
+
+  const onPopAlert = (e: any) => {
+    e.preventDefault();
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Do you want to leave the meeting ?')) {
+      history.replace('/landing');
+    }
+    window.history.pushState(null, '', window.location.pathname);
+  };
+
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.pathname);
+    window.addEventListener('popstate', onPopAlert);
+    return () => {
+      window.removeEventListener('popstate', onPopAlert);
+    };
+  }, []);
+
   return (
     <>
       <div className="flex-row flex-space-evenly height-100p flex-y-start">
