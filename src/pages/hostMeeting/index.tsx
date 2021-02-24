@@ -1,9 +1,10 @@
 import { useMutation } from '@apollo/client';
 import { useStores } from 'hooks/useStores';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
+import LoadingScreen from 'components/loadingScreen';
 import HostMeeting, { HostMeetingInput } from './components/hostMeeting';
 import hostMeetingGQL from './graphql/hostMeeting';
 
@@ -24,7 +25,7 @@ const HostMeetingPage: React.FC = observer(() => {
     });
   };
 
-  return <HostMeeting onHostMeeting={onHostMeeting} />;
+  return loading ? <LoadingScreen /> : <HostMeeting onHostMeeting={onHostMeeting} />;
 });
 
 export default HostMeetingPage;

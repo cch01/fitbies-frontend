@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import SingleLineFormField from 'components/forms/SingleLineFormField';
-import { Message, MessageType } from 'lib/stores/meetingStore';
+import { Message } from 'lib/stores/meetingStore';
 import React, { createRef, useEffect, useState } from 'react';
 import { useForm } from 'react-final-form-hooks';
 import styles from './infoPanel.module.scss';
