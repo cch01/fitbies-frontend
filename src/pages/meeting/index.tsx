@@ -15,7 +15,7 @@ import inviteMeetingGQL from './graphql/inviteMeeting';
 
 const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
-  const [stopSubscription] = useState<boolean>(false);
+  // const [stopSubscription] = useState<boolean>(false);
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isCamOn, setIsCamOn] = useState<boolean>(true);
 
@@ -24,7 +24,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   const {
     meetingId,
     meetingPassCode,
-    roomId,
+    peerRoomId,
     isInitiator,
     isJoining,
     currentMessages,
@@ -34,10 +34,12 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     initiator,
   } = meetingStore;
   useEffect(() => {
-    (_.isNil(roomId || meetingId)) && history.push('/landing');
+    (_.isNil(peerRoomId || meetingId)) && history.push('/landing');
   });
   const userId = authStore.viewer._id!;
-  const { data: meetingChannelData } = useSubscription(meetingChannel, { variables: { userId, meetingId }, skip: stopSubscription });
+
+  // TODO fix multiple subscription bug
+  const { data: meetingChannelData } = useSubscription(meetingChannel, { variables: { userId, meetingId }, fetchPolicy: 'network-only' });
 
   const [sendMeetingMessageMutation] = useMutation(sendMeetingMessageGQL);
 
@@ -49,15 +51,20 @@ const MeetingPage: React.FC = React.memo(observer(() => {
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
 
   userMediaError && console.log('err', userMediaError);
-  console.log('meetingId', meetingStore.meetingId);
+
   const { loading: meetingLoading } = useMeeting({
     isInitiator,
     localMediaStream: stream!,
-    targetId: roomId!,
+    targetId: peerRoomId!,
     userId,
     addVideoStream: meetingStore.addVideoStream,
     addCallObject: meetingStore.addCallObject,
     onPeerConnected: (peer) => meetingStore.setPeer(peer),
+    onError: (err) => {
+      console.log(err);
+      toast.error('Something went wrong');
+      history.push('/landing');
+    },
   });
 
   useEffect(() => {
@@ -65,7 +72,7 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     if (isJoining && meetingStore.peer && stream) {
       console.log('fire connection');
       if (!isInitiator) {
-        meetingStore.connectToPeer(roomId!, stream);
+        meetingStore.connectToPeer(peerRoomId!, stream);
       }
       meetingStore.getJoinerIds(userId)
         .forEach((id) => meetingStore.connectToPeer(id, stream));
