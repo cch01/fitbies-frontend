@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-subscription($userId: ID!, $meetingId: ID!) {
-  meetingChannel(userId: $userId, meetingId:$meetingId) {
+subscription($userId: ID!, $meetingId: String!) {
+  meetingChannel(userId: $userId, meetingId: $meetingId) {
     type
     from {
       _id
@@ -11,6 +11,7 @@ subscription($userId: ID!, $meetingId: ID!) {
     }
     toMeeting {
       _id
+      meetingId
       initiator{
         _id
         nickname

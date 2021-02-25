@@ -3,6 +3,8 @@ import gql from 'graphql-tag';
 export default gql`mutation($joinMeetingInput: JoinMeetingInput!){
   joinMeeting(joinMeetingInput:$joinMeetingInput){
       _id
+      peerRoomId
+      meetingId
       initiator{
           _id
           nickname
@@ -12,7 +14,6 @@ export default gql`mutation($joinMeetingInput: JoinMeetingInput!){
         isLeft
         nickname
       }
-      roomId
       endedAt
   }
 }`;

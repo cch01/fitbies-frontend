@@ -41,7 +41,7 @@ export const useMeeting = ({
 
     peer?.on('open', (id) => {
       isInitiator
-        ? console.log(`this is initiator ${userId}, roomId: ${id}`)
+        ? console.log(`this is initiator ${userId}, peerRoomId: ${id}`)
         : console.log(`this is joiner ${userId}, identity: ${id}`);
       onPeerConnected(peer);
       setLoading(false);

@@ -28,7 +28,8 @@ export interface Message {
 
 interface MeetingInput {
   _id: string;
-  roomId: string;
+  meetingId: string;
+  peerRoomId: string;
   passCode?: string;
   initiator: User;
   participants: User[];
@@ -43,7 +44,7 @@ enum MeetingEventType {
 }
 
 interface Meeting{
-  _id: string;
+  meetingId: string;
   initiator: User;
 }
 
@@ -63,7 +64,7 @@ class MeetingStore {
 
   @observable userId?: string;
 
-  @observable roomId?: string;
+  @observable peerRoomId?: string;
 
   @observable initiator?: User;
 
@@ -93,7 +94,7 @@ class MeetingStore {
     this.meetingPassCode = undefined;
     this.meetingPassCode = undefined;
     this.userId = undefined;
-    this.roomId = undefined;
+    this.peerRoomId = undefined;
     this.participants = [];
     this.messages = [];
     this.peer = undefined;
@@ -105,9 +106,9 @@ class MeetingStore {
   @computed get isInitiator():boolean { return this.initiator?._id === this.userId; }
 
   @action setMeeting(meetingInput: MeetingInput, userId: string, isJoining: boolean):void {
-    this.meetingId = meetingInput._id;
+    this.meetingId = meetingInput.meetingId;
     this.meetingPassCode = meetingInput.passCode;
-    this.roomId = meetingInput.roomId;
+    this.peerRoomId = meetingInput.peerRoomId;
     this.initiator = meetingInput.initiator;
     this.participants = meetingInput.participants;
     this.userId = userId;
@@ -127,8 +128,8 @@ class MeetingStore {
     this.joinersStreams = { ...this.joinersStreams, [connectorId]: stream };
   };
 
-  @action removeVideoStream = (id: string) => {
-    this.joinersStreams = _.omit(this.joinersStreams, [id]);
+  @action removeVideoStream = (connectorId: string) => {
+    this.joinersStreams = _.omit(this.joinersStreams, [connectorId]);
   };
 
   @action addCallObject = (connectorId: string, call: Peer.MediaConnection) => {
@@ -145,7 +146,7 @@ class MeetingStore {
     console.log(`Connecting to ${designatedId}...`);
     const call = this.peer.call(designatedId, localMediaStream!, { metadata: { connectorId: this.userId } });
 
-    const userLabel: string = designatedId === this.roomId ? this.initiator!._id : designatedId;
+    const userLabel: string = designatedId === this.peerRoomId ? this.initiator!._id : designatedId;
 
     call!.on('stream', (stream) => {
       this.addVideoStream(userLabel, stream);
@@ -163,12 +164,12 @@ class MeetingStore {
     this.joinersCallsObjects = { ...this.joinersCallsObjects, [userLabel]: call };
   }
 
-  @action disconnectPeer = (userId: string): void => {
-    if (!this.joinersCallsObjects[userId]) return;
-    console.log(`closing media connection with ${userId}`);
-    this.joinersCallsObjects[userId].close();
-    this.removeVideoStream(userId);
-    this.joinersCallsObjects = _.omit(this.joinersCallsObjects, [userId]);
+  @action disconnectPeer = (connectorId: string): void => {
+    if (!this.joinersCallsObjects[connectorId]) return;
+    console.log(`closing media connection with ${connectorId}`);
+    this.joinersCallsObjects[connectorId].close();
+    this.removeVideoStream(connectorId);
+    this.joinersCallsObjects = _.omit(this.joinersCallsObjects, [connectorId]);
   };
 
   @action getJoinerIds(userId:string): string[] { // except self and initiator
@@ -194,7 +195,7 @@ class MeetingStore {
   @action eventDispatcher(meetingChannelInput: MeetingChannelInput): void {
     const { from } = meetingChannelInput;
     const { toMeeting, userToBeKickedOut, message } = meetingChannelInput;
-    if (toMeeting._id !== this.meetingId) return;
+    if (toMeeting.meetingId !== this.meetingId) return;
 
     switch (meetingChannelInput.type) {
       case MeetingEventType.USER_JOINED: {

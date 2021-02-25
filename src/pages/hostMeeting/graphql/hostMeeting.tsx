@@ -3,7 +3,8 @@ import gql from 'graphql-tag';
 export default gql`mutation($hostMeetingInput: HostMeetingInput!){
   hostMeeting(hostMeetingInput: $hostMeetingInput){
       _id
-      roomId
+      peerRoomId
+      meetingId
       initiator{
         _id
         nickname
