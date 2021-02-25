@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { StringParam, useQueryParams } from 'use-query-params';
 import _ from 'lodash';
 import LoadingScreen from 'components/loadingScreen';
+import { toast } from 'react-toastify';
 import JoinMeeting, { JoinRoomInput } from './components/joinMeeting';
 import joinMeetingGQL from './graphql/joinMeeting';
 
@@ -16,7 +17,7 @@ const JoinMeetingPage: React.FC = observer(() => {
   const { viewer } = authStore;
   const history = useHistory();
   const [{ mid, passcode }] = useQueryParams({ mid: StringParam, passcode: StringParam });
-  const [runJoinMeetingMutation, { loading }] = useMutation(joinMeetingGQL);
+  const [runJoinMeetingMutation, { loading }] = useMutation(joinMeetingGQL, { onError: (err) => toast.error(err.message) });
 
   meetingStore.reset();
 

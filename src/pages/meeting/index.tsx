@@ -58,6 +58,11 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     addVideoStream: meetingStore.addVideoStream,
     addCallObject: meetingStore.addCallObject,
     onPeerConnected: (peer) => meetingStore.setPeer(peer),
+    onError: (err) => {
+      console.log(err);
+      toast.error('Something went wrong');
+      history.goBack();
+    },
   });
 
   useEffect(() => {

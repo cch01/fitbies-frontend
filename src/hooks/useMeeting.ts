@@ -14,6 +14,7 @@ interface UsePeerProps {
   addVideoStream: (connectorId: string, stream: MediaStream) => void;
   addCallObject: (userId: string, call: Peer.MediaConnection) => void;
   onPeerConnected: (peer: Peer) => void;
+  onError:(err: any) => void;
 }
 
 interface UseMeetingOutput {
@@ -21,7 +22,7 @@ interface UseMeetingOutput {
 }
 
 export const useMeeting = ({
-  isInitiator, localMediaStream, targetId, userId, addVideoStream, addCallObject, onPeerConnected,
+  onError, isInitiator, localMediaStream, targetId, userId, addVideoStream, addCallObject, onPeerConnected,
 }: UsePeerProps): UseMeetingOutput => {
   const [loading, setLoading] = useState(true);
   let peer: Peer;
@@ -37,6 +38,7 @@ export const useMeeting = ({
         secure: ENV === 'production' || ENV === 'staging',
       });
     }
+
     peer?.on('open', (id) => {
       isInitiator
         ? console.log(`this is initiator ${userId}, roomId: ${id}`)
@@ -44,9 +46,8 @@ export const useMeeting = ({
       onPeerConnected(peer);
       setLoading(false);
     });
-    peer?.on('error', (error) => {
-      console.error(error);
-    });
+    peer?.on('error', (error) => onError(error));
+
     peer?.on('close', () => {
       console.log('Connection closed');
     });
