@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { Message } from 'lib/stores/meetingStore';
 import _ from 'lodash';
-import { useHistory } from 'react-router-dom';
 import Video from './video';
 import InfoPanel from './infoPanel';
 import InvitationModal from './invitationModal';
@@ -43,13 +42,12 @@ const Meeting: React.FC<MeetingProps> = ({
 
   const onOpenInviteModal = () => setShowInviteModal(true);
   const onCloseInviteModal = () => setShowInviteModal(false);
-  const history = useHistory();
 
   const onPopAlert = (e: any) => {
     e.preventDefault();
     // eslint-disable-next-line no-alert
     if (window.confirm('Do you want to leave the meeting ?')) {
-      history.replace('/landing');
+      onLeaveMeeting();
     }
     window.history.pushState(null, '', window.location.pathname);
   };
