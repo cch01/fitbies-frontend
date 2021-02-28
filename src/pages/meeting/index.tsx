@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
-import { useMutation, useSubscription } from '@apollo/client';
+import { useSubscription } from 'hooks/useSubscription';
+import { useMutation } from '@apollo/client';
 import { useUserMedia } from 'hooks/useUserMedia';
 import LoadingScreen from 'components/loadingScreen';
 import { observer } from 'mobx-react-lite';
@@ -15,7 +16,6 @@ import inviteMeetingGQL from './graphql/inviteMeeting';
 
 const MeetingPage: React.FC = React.memo(observer(() => {
   const history = useHistory();
-  // const [stopSubscription] = useState<boolean>(false);
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isCamOn, setIsCamOn] = useState<boolean>(true);
 
@@ -27,19 +27,23 @@ const MeetingPage: React.FC = React.memo(observer(() => {
     peerRoomId,
     isInitiator,
     isJoining,
-    currentMessages,
-    currentParticipants,
+    participants,
     joinersStreams,
     messages,
     initiator,
   } = meetingStore;
+
   useEffect(() => {
     (_.isNil(peerRoomId || meetingId)) && history.push('/landing');
   });
+
   const userId = authStore.viewer._id!;
 
-  // TODO fix multiple subscription bug
-  const { data: meetingChannelData } = useSubscription(meetingChannel, { variables: { userId, meetingId }, fetchPolicy: 'network-only' });
+  const { data: meetingChannelData, loading } = useSubscription({ query: meetingChannel, variables: { userId, meetingId }, fetchPolicy: 'network-only' },
+    (errs) => errs?.forEach((_err) => {
+      console.log(_err);
+      toast.error(_err.message ?? 'Something went wrong');
+    }));
 
   const [sendMeetingMessageMutation] = useMutation(sendMeetingMessageGQL);
 

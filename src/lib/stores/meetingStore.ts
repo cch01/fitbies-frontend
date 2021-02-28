@@ -80,14 +80,6 @@ class MeetingStore {
 
   @observable joinersCallsObjects: {[x:string]: Peer.MediaConnection} = {};
 
-  @computed get currentMessages(): Message[] {
-    return toJS(this.messages);
-  }
-
-  @computed get currentParticipants(): User[] {
-    return toJS(this.participants);
-  }
-
   @action reset():void {
     console.log('reset meeting store');
     this.meetingId = undefined;
