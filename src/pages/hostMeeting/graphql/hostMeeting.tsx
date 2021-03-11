@@ -5,6 +5,8 @@ export default gql`mutation($hostMeetingInput: HostMeetingInput!){
       _id
       peerRoomId
       meetingId
+      videoOff
+      muted
       initiator{
         _id
         nickname
@@ -13,6 +15,8 @@ export default gql`mutation($hostMeetingInput: HostMeetingInput!){
           _id
           nickname
           isLeft
+          muted
+          videoOff
       }
       passCode
       endedAt

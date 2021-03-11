@@ -14,13 +14,15 @@ interface MeetingProps {
   onToggleCam: () => void;
   onToggleMic: () => void;
   onInviteByEmail: (input: any) => void;
-  isMicOn: boolean;
-  isCamOn: boolean;
+  muted: boolean;
+  videoOff: boolean;
   initiatorName: string | undefined;
   messages: Message[];
   meetingId: string;
   meetingPassCode?: string;
   isInitiator: boolean;
+  meetingVideoOff: boolean;
+  meetingMuted: boolean;
 }
 const Meeting: React.FC<MeetingProps> = ({
   localStream,
@@ -31,12 +33,14 @@ const Meeting: React.FC<MeetingProps> = ({
   onToggleMic,
   onToggleCam,
   onInviteByEmail,
-  isMicOn,
-  isCamOn,
+  muted,
+  videoOff,
   initiatorName,
   meetingId,
   meetingPassCode,
   isInitiator,
+  meetingVideoOff,
+  meetingMuted,
 }) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
 
@@ -88,11 +92,11 @@ const Meeting: React.FC<MeetingProps> = ({
                 role="button"
                 tabIndex={0}
                 onMouseUp={onToggleCam}
-                className="hoverEnlarge transition circle width-40 height-40 overflow-hidden"
+                className={clsx({ hoverEnlarge: !meetingVideoOff }, ' transition circle width-40 height-40 overflow-hidden')}
               >
                 <div className="blur position-absolute width-100p height-100p bg-grey-7" />
                 <div className="white">
-                  <i className={`fas ${isCamOn ? 'fa-video-slash' : 'fa-video'} h4`} />
+                  <i className={`fas ${videoOff || meetingVideoOff ? 'fa-video-slash' : 'fa-video'} h4`} />
                 </div>
               </div>
               <div
@@ -107,11 +111,11 @@ const Meeting: React.FC<MeetingProps> = ({
                 role="button"
                 tabIndex={-2}
                 onMouseUp={onToggleMic}
-                className="circle width-40 height-40 overflow-hidden hoverEnlarge transition"
+                className={clsx({ hoverEnlarge: !meetingMuted }, 'circle width-40 height-40 overflow-hidden transition')}
               >
                 <div className="blur position-absolute width-100p height-100p bg-grey-7" />
                 <div className="white">
-                  <i className={`fas ${isMicOn ? 'fa-microphone-slash' : 'fa-microphone'} h4`} />
+                  <i className={`fas ${muted || meetingMuted ? 'fa-microphone-slash' : 'fa-microphone'} h4`} />
                 </div>
               </div>
             </div>

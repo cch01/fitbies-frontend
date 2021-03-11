@@ -1,6 +1,6 @@
 import { useStores } from 'hooks/useStores';
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import * as _ from 'lodash';
 import { useMeeting } from 'hooks/useMeeting';
 import { useSubscription } from 'hooks/useSubscription';
@@ -9,17 +9,26 @@ import { useUserMedia } from 'hooks/useUserMedia';
 import LoadingScreen from 'components/loadingScreen';
 import { observer } from 'mobx-react-lite';
 import { toast } from 'react-toastify';
+import meetingStore from 'lib/stores/meetingStore';
 import meetingChannel from './graphql/meetingChannel';
 import Meeting from './components/meeting';
 import sendMeetingMessageGQL from './graphql/sendMeetingMessage';
 import inviteMeetingGQL from './graphql/inviteMeeting';
 
-const MeetingPage: React.FC = React.memo(observer(() => {
-  const history = useHistory();
-  const [isMicOn, setIsMicOn] = useState<boolean>(true);
-  const [isCamOn, setIsCamOn] = useState<boolean>(true);
+// TODO toggleMeetingMedia, toggleParticipantMediaGQL, msg receive not re-rendering, mute/cut media from disabled participant
+interface MeetingState {
+  videoOff?: boolean
+  muted?: boolean
+}
 
+const MeetingPage: React.FC = React.memo(observer(() => {
   const { authStore, meetingStore, uiStore } = useStores();
+  const selfMediaSettings = useLocation<MeetingState>().state;
+  const { videoOff: meetingVideoOff, muted: meetingMuted } = meetingStore;
+  const history = useHistory();
+  const [muted, setMuted] = useState<boolean>(selfMediaSettings?.muted ?? false);
+  const [videoOff, setVideoOff] = useState<boolean>(selfMediaSettings?.videoOff ?? false);
+
   uiStore.setTitle(`Meeting with ${meetingStore.initiator?.nickname}`);
   const {
     meetingId,
@@ -45,13 +54,13 @@ const MeetingPage: React.FC = React.memo(observer(() => {
       toast.error(_err.message ?? 'Something went wrong');
     }));
 
-  const [sendMeetingMessageMutation] = useMutation(sendMeetingMessageGQL);
-
+  const [sendMeetingMessage] = useMutation(sendMeetingMessageGQL);
   const [inviteMeeting] = useMutation(inviteMeetingGQL, {
     onCompleted: () => toast.success('Invitation sent'),
     onError: () => toast.error('Something went wrong'),
   });
 
+  // TODO fix cam in use even not in meeting page sometimes
   const { error: userMediaError, stream, loading: streamLoading } = useUserMedia({ width: 640, height: 360 });
 
   userMediaError && console.log('err', userMediaError);
@@ -94,21 +103,21 @@ const MeetingPage: React.FC = React.memo(observer(() => {
       return;
     }
     stream.getVideoTracks().forEach((track) => {
-      track.enabled = isCamOn;
+      track.enabled = !meetingVideoOff && !videoOff;
     });
 
     stream.getAudioTracks().forEach((track) => {
-      track.enabled = isMicOn;
+      track.enabled = !meetingMuted && !muted;
     });
-  }, [stream, isCamOn, isMicOn]);
+  }, [stream, videoOff, muted]);
 
-  const onToggleMic = () => { setIsMicOn((val) => !val); };
-  const onToggleCam = () => { setIsCamOn((val) => !val); };
+  const onToggleMic = () => { setMuted((val) => !val); };
+  const onToggleCam = () => { setVideoOff((val) => !val); };
 
   const onSendMessage = (input: Record<string, string>): void => {
     const { message } = input;
     if (!message) return;
-    sendMeetingMessageMutation({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
+    sendMeetingMessage({ variables: { sendMeetingMessageInput: { userId, meetingId, content: message } } });
   };
 
   const onInviteByEmail = (input: Record<string, string>): void => {
@@ -140,8 +149,10 @@ const MeetingPage: React.FC = React.memo(observer(() => {
         onSendMessage={onSendMessage}
         onToggleMic={onToggleMic}
         onToggleCam={onToggleCam}
-        isMicOn={isMicOn}
-        isCamOn={isCamOn}
+        meetingVideoOff={meetingVideoOff}
+        meetingMuted={meetingMuted}
+        muted={muted}
+        videoOff={videoOff}
       />
     </>
   );

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-  toJS, observable, computed, action, decorate,
+  toJS, computed, action, decorate, observable,
 } from 'mobx';
 import Peer from 'peerjs';
 import { toast } from 'react-toastify';
@@ -10,6 +10,8 @@ interface User {
   nickname: string;
   isLeft?: string;
   email?: string;
+  videoOff: boolean;
+  muted: boolean;
 }
 
 export enum MessageType {
@@ -28,6 +30,8 @@ export interface Message {
 
 interface MeetingInput {
   _id: string;
+  videoOff: boolean;
+  muted: boolean;
   meetingId: string;
   peerRoomId: string;
   passCode?: string;
@@ -80,6 +84,10 @@ class MeetingStore {
 
   @observable joinersCallsObjects: {[x:string]: Peer.MediaConnection} = {};
 
+  @observable videoOff: boolean = false;
+
+  @observable muted: boolean = false;
+
   @action reset():void {
     console.log('reset meeting store');
     this.meetingId = undefined;
@@ -93,6 +101,8 @@ class MeetingStore {
     this.joinersStreams = {};
     this.joinersCallsObjects = {};
     this.isJoining = undefined;
+    this.videoOff = false;
+    this.muted = false;
   }
 
   @computed get isInitiator():boolean { return this.initiator?._id === this.userId; }
@@ -103,6 +113,8 @@ class MeetingStore {
     this.peerRoomId = meetingInput.peerRoomId;
     this.initiator = meetingInput.initiator;
     this.participants = meetingInput.participants;
+    this.videoOff = meetingInput.videoOff;
+    this.muted = meetingInput.muted;
     this.userId = userId;
     this.isJoining = isJoining;
   }
@@ -189,6 +201,7 @@ class MeetingStore {
     const { toMeeting, userToBeKickedOut, message } = meetingChannelInput;
     if (toMeeting.meetingId !== this.meetingId) return;
 
+    // TODO add toggleMicAndCam event handling
     switch (meetingChannelInput.type) {
       case MeetingEventType.USER_JOINED: {
         const index = _.findIndex(this.participants, (_p) => _p._id === from._id);

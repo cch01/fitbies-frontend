@@ -7,7 +7,7 @@ import { StringParam, useQueryParams } from 'use-query-params';
 import _ from 'lodash';
 import LoadingScreen from 'components/loadingScreen';
 import { toast } from 'react-toastify';
-import JoinMeeting, { JoinRoomInput } from './components/joinMeeting';
+import JoinMeeting, { JoinMeetingInput } from './components/joinMeeting';
 import joinMeetingGQL from './graphql/joinMeeting';
 
 const JoinMeetingPage: React.FC = observer(() => {
@@ -22,22 +22,22 @@ const JoinMeetingPage: React.FC = observer(() => {
 
   meetingStore.reset();
 
-  const onJoinMeeting = ({ meetingId, passCode }: JoinRoomInput) => {
-    runJoinMeetingMutation({ variables: { joinMeetingInput: { meetingId, passCode, joinerId: viewer._id } } }).then((result) => {
+  const onJoinMeeting = ({ meetingId, passCode, ...mediaSettings }: JoinMeetingInput) => {
+    runJoinMeetingMutation({
+      variables: {
+        joinMeetingInput: {
+          meetingId, passCode, joinerId: viewer._id,
+        },
+      },
+    }).then((result) => {
       if (!_.isEmpty(result?.data?.joinMeeting.peerRoomId)) {
         meetingStore.setMeeting(result?.data?.joinMeeting, viewer._id!, true);
-        history.push('/meeting');
+        history.push('/meeting', { ...mediaSettings });
       }
     });
   };
 
-  useEffect(() => {
-    if (viewer && mid) {
-      onJoinMeeting({ meetingId: mid, passCode: passcode });
-    }
-  }, [viewer && mid]);
-
-  return loading ? <LoadingScreen /> : <JoinMeeting onJoinMeeting={onJoinMeeting} />;
+  return loading ? <LoadingScreen /> : <JoinMeeting meetingId={mid ?? undefined} passCode={passcode ?? undefined} onJoinMeeting={onJoinMeeting} />;
 });
 
 export default JoinMeetingPage;
