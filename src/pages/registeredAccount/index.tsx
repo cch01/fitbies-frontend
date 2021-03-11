@@ -20,6 +20,7 @@ const RegisteredAccountPage: React.FC = () => {
       email={email}
       onBackHome={() => {
         authStore.setViewer(viewerData);
+        history.push('/');
       }}
     />
   );

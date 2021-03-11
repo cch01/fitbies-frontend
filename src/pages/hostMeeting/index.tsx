@@ -16,11 +16,11 @@ const HostMeetingPage: React.FC = observer(() => {
   const [runJoinMeetingMutation, { loading }] = useMutation(hostMeetingGQL);
   meetingStore.reset();
 
-  const onHostMeeting = ({ passCode }: HostMeetingInput) => {
-    runJoinMeetingMutation({ variables: { hostMeetingInput: { passCode, initiatorId: viewer._id } } }).then(({ data }) => {
+  const onHostMeeting = ({ selfVideoOff, selfMuted, ...hostMeetingInput }: HostMeetingInput) => {
+    runJoinMeetingMutation({ variables: { hostMeetingInput: { ...hostMeetingInput, initiatorId: viewer._id } } }).then(({ data }) => {
       if (!_.isEmpty(data.hostMeeting.peerRoomId)) {
         meetingStore.setMeeting(data.hostMeeting, viewer._id!, false);
-        history.push('/meeting');
+        history.push('/meeting', { videoOff: selfVideoOff, muted: selfMuted });
       }
     });
   };

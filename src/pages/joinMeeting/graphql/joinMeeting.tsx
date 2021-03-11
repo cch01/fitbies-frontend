@@ -13,7 +13,11 @@ export default gql`mutation($joinMeetingInput: JoinMeetingInput!){
         _id
         isLeft
         nickname
+        muted
+        videoOff
       }
+      muted
+      videoOff
       endedAt
   }
 }`;
